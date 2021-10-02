@@ -4,13 +4,11 @@ import { Container, Row, Col } from 'react-bootstrap'
 const Footer = () => {
     return (
         <footer>
-            <Container>
-                <Row>
-                    <Col className="text-center py-4">
-                        Footer
-                    </Col>
-                </Row>
-            </Container>
+            <Row>
+                <Col className="text-center py-2 text-white bg-secondary">
+                    Footer
+                </Col>
+            </Row>
         </footer>
     )
 }

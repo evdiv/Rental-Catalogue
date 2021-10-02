@@ -3,6 +3,8 @@
 # dependencies
 node_modules
 node_modules/
+frontend/public/images/
+products-static-data.js
 /.pnp
 .pnp.js
 
