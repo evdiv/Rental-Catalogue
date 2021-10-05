@@ -8,9 +8,9 @@ const FeaturedProductsView = () => {
         <>        
             <h3>Featured Products</h3>
             <Row>
-                {products.map(product => (
-                    <Col sm={12} md={3} lg={2} >
-                        <ProductPreView product={product}/>
+                {products.map(p => (
+                    <Col key={p._id} sm={12} md={3} lg={2} >
+                        <ProductPreView product={p}/>
                     </Col>
                 )) }
             </Row>

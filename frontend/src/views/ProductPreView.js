@@ -1,26 +1,28 @@
 import React from 'react'
 import Card from 'react-bootstrap/Card'
+import {Link} from 'react-router-dom'
 
 const ProductPreView = ({product}) => {
     return (
         <Card className="p-2 my-2 rounded">
-            <a href={`/product/${product._id}`}>
+            <Link to={`/product/${product._id}`}>
                 <Card.Img src={`/images/products/${product.image}`} variant='top' />
-            </a>
+            </Link>
 
             <Card.Body>
-                <a href={`/product/${product._id}`}>
+                <Link to={`/product/${product._id}`}>
                     <Card.Title>{product.name}</Card.Title>
-                </a>
+                </Link>
 
                 <Card.Text className='my-2'>
                     <small className="text-muted"> 
                         Product Reviews({product.numReviews} Reviews)
-                        <a href="#" data-toggle="modal" data-target="#reviewModal">Write a Review</a>
                     </small>
                 </Card.Text>
 
-                <Card.Text as='h4'>${product.price}</Card.Text>
+                <Card.Text as='h6'>1 Day ${product.dayPrice}</Card.Text>
+                <Card.Text as='h6'>1 Week ${product.weekPrice}</Card.Text>
+                <Card.Text as='h6'>1 Month ${product.monthPrice}</Card.Text>
 
             </Card.Body>
         </Card>
