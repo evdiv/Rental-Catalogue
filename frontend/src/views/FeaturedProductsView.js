@@ -1,9 +1,19 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import axios from 'axios'
 import { Row, Col } from 'react-bootstrap'
 import ProductPreView from './ProductPreView'
-import products from '../products-static-data'
 
 const FeaturedProductsView = () => {
+    const [products, setProducts] = useState([])
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const response = await axios.get('/api/v1/products')
+            setProducts(response.data)
+        }
+        fetchProducts()
+    }, [])
+
     return (
         <>        
             <h3>Featured Products</h3>

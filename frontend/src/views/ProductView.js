@@ -1,16 +1,22 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import axios from 'axios'
 import { Row, Col, Image, Form, Button} from 'react-bootstrap'
 import Breadcrumbs from '../components/Breadcrumbs'
-import products from '../products-static-data'
 
 const ProductView = ({match}) => {
-    const product = products.find(p => {
-        return p._id === match.params.id
-    })
+    const [product, setProduct] = useState({})
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            const response = await axios.get(`/api/v1/products/${match.params.id}`)
+            setProduct(response.data)
+        }
+        fetchProduct()
+    }, [match.params.id])
 
     return (
-        <>
-            <Breadcrumbs brand={product.brand} productName={product.name}/>
+        <>  
+            {product.brand !== undefined && <Breadcrumbs brand={product.brand} productName={product.name} />}
             <Row>
                 <Col sm={12}><h3>{product.brand} {product.name}</h3></Col>
                 <Col md={6}>
