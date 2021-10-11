@@ -3,9 +3,6 @@ const express = require('express')
 
 const Product = require('./models/productModel')
 
-Product.getByID(30)
-Product.getFeatured()
-
 const app = express()
 
 
@@ -13,14 +10,13 @@ app.get('/', (req, res) => {
     res.send('...')
 })
 
-app.get('/api/v1/products', (req, res) => {
+app.get('/api/v1/products', async (req, res) => {
+    const products = await Product.getFeatured()
     res.json(products)
 })
 
-app.get('/api/v1/products/:id', (req, res) => {
-    const product = products.find(p => {
-        return p._id === req.params.id
-    })
+app.get('/api/v1/products/:id', async (req, res) => {
+    const product = await Product.getByID(req.params.id)
     res.json(product)
 })
 

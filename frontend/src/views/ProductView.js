@@ -9,29 +9,29 @@ const ProductView = ({match}) => {
     useEffect(() => {
         const fetchProduct = async () => {
             const response = await axios.get(`/api/v1/products/${match.params.id}`)
-            setProduct(response.data)
+            setProduct(response.data[0])
         }
         fetchProduct()
     }, [match.params.id])
 
     return (
         <>  
-            {product.brand !== undefined && <Breadcrumbs brand={product.brand} productName={product.name} />}
+            { product.BrandName !== undefined && <Breadcrumbs brand={product.BrandName} productName={product.ProductName} />}
             <Row>
-                <Col sm={12}><h3>{product.brand} {product.name}</h3></Col>
+                <Col sm={12}><h3>{product.BrandName} {product.ProductName}</h3></Col>
                 <Col md={6}>
-                    <Image src={`/images/products/${product.image}`} rounded fluid/>
+                    <Image src={`/images/products/${product.Image1}`} rounded fluid/>
                 </Col>
                 <Col md={6}>
                     <Row>
-                        <Col md={3}>SKU: {product.sku}</Col>
-                        <Col md={3}>Model: {product.model}</Col>
+                        <Col md={3}>SKU: {product.ProductSku}</Col>
+                        <Col md={3}>Model: {product.ProductModel}</Col>
                     </Row>
 
                     <h4 style={{marginTop: 30, marginBottom: 20}}>Your Price: </h4>
-                    <h6>1 Day: ${product.dayPrice} CDN</h6>
-                    <h6>1 Week: ${product.weekPrice} CDN</h6>
-                    <h6>1 Month: ${product.monthPrice} CDN</h6>
+                    <h6>1 Day: ${product.DailyRentalRate} CDN</h6>
+                    <h6>1 Week: ${product.WeeklyRentalRate} CDN</h6>
+                    <h6>1 Month: ${product.MonthlyRentalRate} CDN</h6>
 
                     <p style={{ marginTop: 20, marginBottom: 30}}>{product.description}</p>
 
