@@ -5,11 +5,9 @@ import ProductPreView from './ProductPreView'
 import { featuredProducts } from '../actions/productActions'
 
 const FeaturedProductsView = () => {
+    const { loading, error, products } = useSelector(state => state.featuredProducts)
+
     const dispatch = useDispatch()
-
-    const productsList = useSelector(state => state.featuredProducts)
-    const { loading, error, products } = productsList
-
     useEffect(() => {
         dispatch(featuredProducts())
     }, [dispatch])

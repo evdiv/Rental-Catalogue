@@ -16,7 +16,8 @@ const getByID = async(id) => {
     id = id || 0
     const sql = 'SELECT * FROM products WHERE Active = 1 AND productsID = ?';
     const params = [id]
-    return await execute(sql, params)
+    const rows = await execute(sql, params)
+    return rows[0]
 }
 
 const getFeatured = async() => {

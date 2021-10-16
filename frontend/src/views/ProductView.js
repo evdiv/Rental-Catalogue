@@ -1,21 +1,21 @@
-import React, {useState, useEffect} from 'react'
-import axios from 'axios'
+import React, {useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Image, Form, Button} from 'react-bootstrap'
+import { singleProduct } from '../actions/productActions'
 import Breadcrumbs from '../components/Breadcrumbs'
 
 const ProductView = ({match}) => {
-    const [product, setProduct] = useState({})
+    const { product, loading, error } = useSelector(state => state.singleProduct)
 
+    const dispatch = useDispatch()
     useEffect(() => {
-        const fetchProduct = async () => {
-            const response = await axios.get(`/api/v1/products/${match.params.id}`)
-            setProduct(response.data[0])
-        }
-        fetchProduct()
-    }, [match.params.id])
+        dispatch(singleProduct(match.params.id))
+    }, [dispatch])
+
 
     return (
         <>  
+            {loading ? <h3>Loading ...</h3> : error ? <h3>{error}</h3> : ''}
             { product.BrandName !== undefined && <Breadcrumbs brand={product.BrandName} productName={product.ProductName} />}
             <Row>
                 <Col sm={12}><h3>{product.BrandName} {product.ProductName}</h3></Col>
@@ -57,10 +57,6 @@ const ProductView = ({match}) => {
 
                         </Row>
                     </Form>
-
-
-                    
-                        
 
                 </Col>
             </Row>
