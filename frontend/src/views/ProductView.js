@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Row, Col, Image, Form, Button} from 'react-bootstrap'
+import { Row, Col, Image} from 'react-bootstrap'
 import { getSingleProduct } from '../actions/productActions'
 import Breadcrumbs from '../components/Breadcrumbs'
+import AddToCart from '../components/AddToCart'
 
 const ProductView = ({match}) => {
     const { product, loading, error } = useSelector(state => state.singleProduct)
@@ -34,29 +35,7 @@ const ProductView = ({match}) => {
 
                     <p style={{ marginTop: 20, marginBottom: 30}}>{product.description}</p>
 
-                    <Form>
-                        <Row>
-                            <Form.Group as={Col} md={3}>
-                                <Form.Label>Enter a number</Form.Label>
-                                <Form.Control type="number" />
-                            </Form.Group>
-
-                            <Form.Group as={Col} md={9}>
-                                <Form.Label>Choose rent term...</Form.Label>
-                                <Form.Select defaultValue="day">
-                                    <option value="day">Days</option>
-                                    <option value="week">Weeks</option>
-                                    <option value="month">Months</option>
-                                </Form.Select>
-                            </Form.Group>
-
-                            <Form.Group as={Col} md={12}>
-                                <Button style={{ marginTop: 20, marginBottom: 30 }} variant="primary">Add to Cart</Button>
-                            </Form.Group>
-
-                        </Row>
-                    </Form>
-
+                    <AddToCart product={product}/>
                 </Col>
             </Row>
         </>

@@ -12,7 +12,12 @@ const execute = async (sql, params) => {
     }
 }
 
-const getByID = async(id) => {
+const getAll = async () => {
+    const sql = 'SELECT * FROM products WHERE Active = 1 AND DailyRentalRate > 0 LIMIT 10';
+    return await execute(sql)
+}
+
+const getByID = async (id) => {
     id = id || 0
     const sql = 'SELECT * FROM products WHERE Active = 1 AND productsID = ?';
     const params = [id]
@@ -25,6 +30,11 @@ const getFeatured = async() => {
     return await execute(sql)
 }
 
+const getOnSale = async () => {
+    const sql = 'SELECT * FROM products WHERE Active = 1 AND DailyRentalRate > 0 AND onSale = 1 LIMIT 10';
+    return await execute(sql)
+}
+
 const getByBrandID = async(id) => {
     id = id || 0
     const sql = 'SELECT * FROM products WHERE Active = 1 AND DailyRentalRate > 0 AND brandID = ?';
@@ -32,4 +42,4 @@ const getByBrandID = async(id) => {
     return await execute(sql, params)
 }
 
-module.exports = { getByID, getFeatured, getByBrandID }
+module.exports = { getAll, getByID, getFeatured, getByBrandID, getOnSale }

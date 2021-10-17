@@ -11,7 +11,6 @@ export const getAllBrands = () => async (dispatch) => {
     }
 }
 
-
 export const getSingleBrand = (id) => async (dispatch) => {
     try {
         dispatch({ type: "SINGLE_BRAND_REQUEST" })

@@ -12,7 +12,18 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/v1/products', async (req, res) => {
-    const products = await Product.getFeatured()
+    let products = []
+    switch (req.query.type) {
+        case 'featured':
+            products = await Product.getFeatured()
+            break;
+        case 'onsale': 
+            products = await Product.getOnSale()
+            break;
+        default:
+            products = await Product.getAll()
+    }
+    
     res.json(products)
 })
 

@@ -11,6 +11,20 @@ export const featuredProductsReducer = (state ={products: []}, action) => {
     }
 }
 
+export const onSaleProductsReducer = (state = { products: [] }, action) => {
+    switch (action.type) {
+        case 'ONSALE_PRODUCTS_REQUEST':
+            return { products: [], loading: true }
+        case 'ONSALE_PRODUCTS_SUCCESS':
+            return { products: action.payload, loading: false }
+        case 'ONSALE_PRODUCTS_FAIL':
+            return { products: [], loading: false, error: action.payload }
+        default:
+            return state
+    }
+}
+
+
 export const singleProductReducer = (state ={product: {}}, action) => {
     switch(action.type) {
         case 'SINGLE_PRODUCT_REQUEST':
