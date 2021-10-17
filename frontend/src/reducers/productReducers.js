@@ -1,4 +1,4 @@
-export const featuredProductsReducer = (state ={products: [], loading: false}, action) => {
+export const featuredProductsReducer = (state ={products: []}, action) => {
     switch (action.type) {
         case 'FEATURED_PRODUCTS_REQUEST':
             return { products: [], loading: true}
@@ -11,7 +11,7 @@ export const featuredProductsReducer = (state ={products: [], loading: false}, a
     }
 }
 
-export const singleProductReducer = (state ={product: {}, loading: false}, action) => {
+export const singleProductReducer = (state ={product: {}}, action) => {
     switch(action.type) {
         case 'SINGLE_PRODUCT_REQUEST':
             return {product: {}, loading: true}
@@ -19,6 +19,19 @@ export const singleProductReducer = (state ={product: {}, loading: false}, actio
             return {product: action.payload, loading: false}
         case 'SINGLE_PRODUCT_FAIL': 
             return {product: {}, error: action.payload, loading: false}
+        default:
+            return state
+    }
+}
+
+export const brandProductsReducer = (state ={products: []}, action) => {
+    switch(action.type) {
+        case 'BRAND_PRODUCTS_REQUEST':
+            return {products: [], loading: true}
+        case 'BRAND_PRODUCTS_SUCCESS':
+            return {products: action.payload, loading: false}
+        case 'BRAND_PRODUCTS_FAIL':
+            return {products: [], error: action.payload, loading: false}
         default:
             return state
     }

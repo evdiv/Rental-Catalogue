@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Image, Form, Button} from 'react-bootstrap'
-import { singleProduct } from '../actions/productActions'
+import { getSingleProduct } from '../actions/productActions'
 import Breadcrumbs from '../components/Breadcrumbs'
 
 const ProductView = ({match}) => {
@@ -9,14 +9,13 @@ const ProductView = ({match}) => {
 
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(singleProduct(match.params.id))
-    }, [dispatch])
-
+        dispatch(getSingleProduct(match.params.id))
+    }, [dispatch, match.params.id])
 
     return (
         <>  
             {loading ? <h3>Loading ...</h3> : error ? <h3>{error}</h3> : ''}
-            { product.BrandName !== undefined && <Breadcrumbs brand={product.BrandName} productName={product.ProductName} />}
+            { product.BrandName !== undefined && <Breadcrumbs product={product} />}
             <Row>
                 <Col sm={12}><h3>{product.BrandName} {product.ProductName}</h3></Col>
                 <Col md={6}>

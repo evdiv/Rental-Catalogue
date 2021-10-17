@@ -2,19 +2,18 @@ import React from 'react'
 import { Breadcrumb } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 
-const Breadcrumbs = (props) => {
-    const brandUrl = props.brand.toLowerCase().replace(" ", "-");
+const Breadcrumbs = ({product}) => {
     return (
         <Breadcrumb>
             <LinkContainer to="/">
                 <Breadcrumb.Item>Home</Breadcrumb.Item>
             </LinkContainer>
             
-            <LinkContainer to={`/${brandUrl}`}>
-                <Breadcrumb.Item>{props.brand}</Breadcrumb.Item>
+            <LinkContainer to={`/brands/${product.BrandID}`}>
+                <Breadcrumb.Item>{product.BrandName}</Breadcrumb.Item>
             </LinkContainer>
             
-            <Breadcrumb.Item active>{props.productName}</Breadcrumb.Item>
+            <Breadcrumb.Item active>{product.ProductName}</Breadcrumb.Item>
         </Breadcrumb>
     )
 }

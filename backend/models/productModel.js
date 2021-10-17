@@ -21,11 +21,11 @@ const getByID = async(id) => {
 }
 
 const getFeatured = async() => {
-    const sql = 'SELECT * FROM products WHERE Active = 1 AND DailyRentalRate > 0 AND featured = 1 LIMIT 5';
+    const sql = 'SELECT * FROM products WHERE Active = 1 AND DailyRentalRate > 0 AND featured = 1 LIMIT 10';
     return await execute(sql)
 }
 
-const getByBrandID = async (id) => {
+const getByBrandID = async(id) => {
     id = id || 0
     const sql = 'SELECT * FROM products WHERE Active = 1 AND DailyRentalRate > 0 AND brandID = ?';
     const params = [id]

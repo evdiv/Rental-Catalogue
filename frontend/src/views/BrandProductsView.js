@@ -2,19 +2,19 @@ import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
 import ProductPreView from './ProductPreView'
-import { getFeaturedProducts } from '../actions/productActions'
+import { getBrandProducts } from '../actions/productActions'
 
-const FeaturedProductsView = () => {
-    const { loading, error, products } = useSelector(state => state.featuredProducts)
+const BrandProductsView = ({ match }) => {
+    const { loading, error, products } = useSelector(state => state.brandProducts)
 
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(getFeaturedProducts())
-    }, [dispatch])
+        dispatch(getBrandProducts(match.params.id))
+    }, [dispatch, match.params.id])
 
     return (
         <>        
-            <h3>Featured Products</h3>
+            <h3>Products</h3>
             {loading ? <h3>Loading ...</h3> : error ? <h3>{error}</h3> : (
                 <Row>
                     {products.map(p => (
@@ -28,5 +28,5 @@ const FeaturedProductsView = () => {
     )
 }
 
-export default FeaturedProductsView
+export default BrandProductsView
 
