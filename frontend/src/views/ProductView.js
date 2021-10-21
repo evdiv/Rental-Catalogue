@@ -6,6 +6,7 @@ import Breadcrumbs from '../components/Breadcrumbs'
 import AddToCart from '../components/AddToCart'
 
 const ProductView = ({match}) => {
+
     const { product, loading, error } = useSelector(state => state.singleProduct)
 
     const dispatch = useDispatch()
