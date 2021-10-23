@@ -1,19 +1,23 @@
 export const cartReducer = (state = {cartProducts: []}, action) => {
     switch (action.type) {
         case "CART_ADD_PRODUCT":
-            const product = action.payload
+            const {id, qty} = action.payload
 
-            const inCart = state.cartProducts.find(p => p.ProductsID === product.ProductsID)
+            const inCart = state.cartProducts.find(p => p.id === id)
             if (inCart){
                 return {
                     ...state,
-                    cartProducts: state.cartProducts.map(p => p.ProductsID === product.ProductsID 
-                        ? p.qty += product.qty : p)
+                    cartProducts: state.cartProducts.map(p => {
+                        if (p.id === id) { 
+                            p.qty += qty
+                        }
+                        return p 
+                    }) 
                 } 
             } else {
                 return {
                     ...state,
-                    cartProducts: [...state.cartProducts, product]
+                    cartProducts: [...state.cartProducts, {id, qty}]
                 }
             }
     

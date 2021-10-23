@@ -9,7 +9,7 @@ const AddToCart = ({product}) => {
     const dispatch = useDispatch()
 
     const addToCartHandler = () => {
-        dispatch(addToCart({ id: product.ProductsID, qty: qty}))
+        dispatch(addToCart({ id: product.ProductsID, qty}))
     }
 
     return (

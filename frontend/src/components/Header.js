@@ -1,8 +1,12 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import {LinkContainer} from 'react-router-bootstrap'
 import {Container, Nav, Navbar, Badge} from 'react-bootstrap'
 
 const Header = () => {
+    const {cartProducts} = useSelector(state => state.cart)
+    const qty = cartProducts.reduce((total, p) => total + p.qty, 0)
+
     return (
         <header>
             <Navbar bg="primary" variant="dark">
@@ -36,7 +40,7 @@ const Header = () => {
                         
                         <LinkContainer to="/cart">
                             <Nav.Link><i className="fas fa-shopping-cart"></i> View Cart &nbsp;
-                                <Badge pill bg="danger"> 0 </Badge>
+                                <Badge pill bg="danger"> {qty} </Badge>
                             </Nav.Link>
                         </LinkContainer>                        
                     </Nav>
