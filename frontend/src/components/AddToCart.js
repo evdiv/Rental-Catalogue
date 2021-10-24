@@ -11,7 +11,7 @@ const AddToCart = ({product}) => {
     const dispatch = useDispatch()
 
     const addToCartHandler = () => {
-        dispatch(addToCart({ id: product.ProductsID, qty, days: (days * rentTerm)}))
+        dispatch(addToCart({ product, qty, days: (days * rentTerm)}))
     }
 
     return (
