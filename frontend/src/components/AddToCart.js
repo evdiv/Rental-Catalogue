@@ -5,11 +5,13 @@ import { addToCart } from '../actions/cartActions'
 
 const AddToCart = ({product}) => {
     const [qty, setQty] = useState(1)
+    const [days, setDays] = useState(1)
+    const [rentTerm, setRentTerm] = useState(1)
 
     const dispatch = useDispatch()
 
     const addToCartHandler = () => {
-        dispatch(addToCart({ id: product.ProductsID, qty}))
+        dispatch(addToCart({ id: product.ProductsID, qty, days: (days * rentTerm)}))
     }
 
     return (
@@ -20,12 +22,18 @@ const AddToCart = ({product}) => {
                     <Form.Control type="number" value={qty} onChange={e => setQty(e.target.value)}/>
                 </Form.Group>
 
-                <Form.Group as={Col} md={9}>
+                <Form.Group as={Col} md={2}>
+                    <Form.Label>Rent term</Form.Label>
+                    <Form.Control type="number" value={days} onChange={e => setDays(e.target.value)} />
+                </Form.Group>
+
+
+                <Form.Group as={Col} md={7}>
                     <Form.Label>Choose rent term...</Form.Label>
-                    <Form.Select defaultValue="day">
-                        <option value="day">Days</option>
-                        <option value="week">Weeks</option>
-                        <option value="month">Months</option>
+                    <Form.Select defaultValue="1" onChange={e => setRentTerm(e.target.value)}>
+                        <option value="1">Days</option>
+                        <option value="7">Weeks</option>
+                        <option value="30">Months</option>
                     </Form.Select>
                 </Form.Group>
 

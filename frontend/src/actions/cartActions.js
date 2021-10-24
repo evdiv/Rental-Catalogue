@@ -1,10 +1,11 @@
-export const addToCart = ({id, qty}) => async (dispatch, getState) => {
+export const addToCart = ({id, qty, days}) => async (dispatch, getState) => {
 
     dispatch({
         type: "CART_ADD_PRODUCT",
         payload: {
             id: id,
-            qty: +qty
+            qty: +qty,
+            days: days
         }
     })
 
