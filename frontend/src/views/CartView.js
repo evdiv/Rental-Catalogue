@@ -1,12 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { Row, Col, Badge, Table} from 'react-bootstrap'
+import { Row, Col, Badge, Table, Alert, Button} from 'react-bootstrap'
 import { removeFromCart } from '../actions/cartActions'
 import RentalTerm from '../components/RentalTerm'
 
 const CartView = () => {
     const {cartProducts} = useSelector(state => state.cart)
+    const totalQty = cartProducts.reduce((total, p) => total + p.qty, 0)
+    const totalPrice = cartProducts.reduce((price, p) => price + (p.product.DailyRentalRate * p.qty), 0)
 
     const dispatch = useDispatch()
 
@@ -56,7 +58,14 @@ const CartView = () => {
                 }
             </Col>
 
-            <Col md={4}></Col>
+            <Col md={4}>
+               {cartProducts.length > 0 && 
+                    <Alert variant={'warning'}>
+                   <p>Cart subtotal ({totalQty} {totalQty > 1 ? 'items' : 'item'}):  <b>${totalPrice.toFixed(2)}</b></p>
+                        <Button>Proceed to Checkout</Button>
+                    </Alert>
+               }
+            </Col>
        </Row>
    )
 }
