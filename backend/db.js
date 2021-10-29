@@ -22,4 +22,17 @@ const connection = async() => {
     }
 }
 
-module.exports = connection
+const execute = async (sql, params) => {
+    params = params || []
+    try {
+        const db = await connection()
+        const [rows] = await db.execute(sql, params);
+        return rows
+    } catch (error) {
+        console.log(`Connection error ${error.message}`)
+        process.exit(1)
+    }
+}
+
+
+module.exports = execute

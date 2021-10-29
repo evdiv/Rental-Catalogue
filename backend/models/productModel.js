@@ -1,16 +1,4 @@
-const connection = require('../db')
-
-const execute = async (sql, params) => {
-    params = params || []
-    try{
-        const db = await connection()
-        const [rows] = await db.execute(sql, params);
-        return rows
-    } catch(error) {
-        console.log(`Connection error ${error.message}`)
-        process.exit(1)
-    }
-}
+const execute = require('../db')
 
 const getAll = async () => {
     const sql = 'SELECT * FROM products WHERE Active = 1 AND DailyRentalRate > 0 LIMIT 10';
