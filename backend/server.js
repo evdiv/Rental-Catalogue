@@ -3,9 +3,11 @@ const express = require('express')
 
 const Product = require('./models/productModel')
 const Brand = require('./models/brandModel')
+const User = require('./models/userModel')
 
 const app = express()
-
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.send('...')
@@ -40,6 +42,17 @@ app.get('/api/v1/products/:id', async (req, res) => {
 app.get('/api/v1/brands', async (req, res) => {
     const brands = await Brand.getAll()
     res.json(brands)
+})
+
+app.post('/api/v1/users/login', async (req, res) => {
+    const { email, pass } = req.body
+    const user = await User.login(email, pass)
+    res.json({
+        id: user.AccountsID,
+        firstName: user.FirstName,
+        lastName: user.LastName,
+        email: user.Email
+    })
 })
 
 

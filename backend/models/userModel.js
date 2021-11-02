@@ -1,31 +1,32 @@
-const connection = require('../db')
-
-const execute = async (sql, params) => {
-    params = params || []
-    try {
-        const db = await connection()
-        const [rows] = await db.execute(sql, params);
-        return rows
-    } catch (error) {
-        console.log(`Connection error ${error.message}`)
-        process.exit(1)
-    }
-}
+const md5 = require('md5')
+const execute = require('../db')
 
 const getByID = async (id) => {
     id = id || 0
     const sql = 'SELECT * FROM accounts WHERE active = 1 AND accountsID = ?';
-    const params = [id]
+    const rows = await execute(sql, params)
 
-    return await execute(sql, params)
+    return rows[0]
 }
 
 const getByEmail = async (email) => {
     email = email || ''
     const sql = 'SELECT * FROM accounts WHERE active = 1 AND email = ?';
     const params = [email]
+    const rows = await execute(sql, params)
 
-    return await execute(sql, params)
+    return rows[0]
 }
 
-module.exports = { getByID, getByEmail }
+const login = async(email, pass) => {
+    email = email || ''
+    pass = md5(pass) || ''
+
+    const sql = 'SELECT * FROM accounts WHERE active = 1 AND email = ? AND password = ?';
+    const params = [email, pass]
+    const rows = await execute(sql, params)
+
+    return rows[0]
+}
+
+module.exports = { getByID, getByEmail, login }
