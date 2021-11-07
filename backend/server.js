@@ -5,6 +5,8 @@ const Product = require('./models/productModel')
 const Brand = require('./models/brandModel')
 const User = require('./models/userModel')
 
+const restrict = require('./middleware/authMiddleware')
+
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
@@ -46,13 +48,21 @@ app.get('/api/v1/brands', async (req, res) => {
 
 app.post('/api/v1/users/login', async (req, res) => {
     const { email, pass } = req.body
-    const user = await User.login(email, pass)
-    res.json({
-        id: user.AccountsID,
-        firstName: user.FirstName,
-        lastName: user.LastName,
-        email: user.Email
-    })
+    try {
+        const user = await User.login(email, pass)
+        res.json(user)
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+app.get('/api/v1/users/account', restrict, async (req, res) => {
+    try{
+        const user = await User.getByID(req.body.userId)
+        res.json(user)
+    } catch(err){
+        res.status(401).send({ error: err.message })
+    }
 })
 
 
