@@ -46,10 +46,30 @@ app.get('/api/v1/brands', async (req, res) => {
     res.json(brands)
 })
 
-app.post('/api/v1/users/login', async (req, res) => {
-    const { email, pass } = req.body
+
+app.post('/api/v1/users', async (req, res) => {
+    try{
+        const user = await User.getByEmail(req.body)
+        if (user) {
+            res.status(400).send({ error: 'User already exists' })
+        }
+    } catch (err){
+        res.status(400).send({ error: err.message })
+    }
+
     try {
-        const user = await User.login(email, pass)
+        const userId = await User.store(req.body)
+        const user = await User.getByID({ userId })
+        res.json(user)
+    } catch(err){
+        res.status(400).send({ error: err.message })
+    }
+})
+
+
+app.post('/api/v1/users/login', async (req, res) => {
+    try {
+        const user = await User.login(req.body)
         res.json(user)
     } catch (err) {
         res.status(401).send({ error: err.message })
@@ -58,7 +78,7 @@ app.post('/api/v1/users/login', async (req, res) => {
 
 app.get('/api/v1/users/account', restrict, async (req, res) => {
     try{
-        const user = await User.getByID(req.body.userId)
+        const user = await User.getByID(req.body)
         res.json(user)
     } catch(err){
         res.status(401).send({ error: err.message })
