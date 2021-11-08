@@ -19,7 +19,7 @@ const store = async(reqBody) => {
         reqBody.homeAddress,
         reqBody.homeCity,
         reqBody.postalCode,
-        reqBody.provinceId
+        reqBody.provincesID
     ]
     const result = await execute(sql, params)
     if (!result.insertId){
@@ -28,17 +28,62 @@ const store = async(reqBody) => {
     return result.insertId
 }
 
+const update = async (reqBody) => {
+    const user = await getByID(reqBody)
+    const updatedUser = {
+        firstName: reqBody.firstName ? reqBody.firstName : user.firstName,
+        lastName: reqBody.lastName ? reqBody.lastName : user.lastName,
+        email: reqBody.email ? reqBody.email : user.email,
+        password: reqBody.password ? md5(reqBody.password) : user.password,
+        homeAddress: reqBody.homeAddress ? reqBody.homeAddress : user.homeAddress,
+        homeCity: reqBody.homeCity ? reqBody.homeCity : user.homeCity,
+        postalCode: reqBody.postalCode ? reqBody.postalCode : user.postalCode,
+        provincesID: reqBody.provincesID ? reqBody.provincesID : user.provincesID
+    }
+
+    const sql = `UPDATE accounts SET 
+                        firstName = ?, 
+                        lastName = ?, 
+                        email = ?, 
+                        password = ?, 
+                        homeAddress = ?, 
+                        homeCity = ?, 
+                        postalCode = ?, 
+                        provincesID = ?
+                    WHERE AccountsID = ${user.accountsID}`;
+
+    const params = [
+        updatedUser.firstName,
+        updatedUser.lastName,
+        updatedUser.email,
+        updatedUser.password,
+        updatedUser.homeAddress,
+        updatedUser.homeCity,
+        updatedUser.postalCode,
+        updatedUser.provincesID
+    ]
+    const result = await execute(sql, params)
+
+    console.log(result)
+
+    if (!result.affectedRows) {
+        throw Error("System Error")
+    }
+    delete updatedUser.password
+    return updatedUser
+}
+
 const getByID = async (reqBody) => {
-    const errors = validate(reqBody, "userId")
+    const errors = validate(reqBody, "accountsID")
     if (errors.length > 0) {
         throw Error(errors.join(" "))
     }
 
-    const sql = `SELECT a.accountsID, a.firstName, a.lastName, a.email, a.homeAddress, a.homeCity, a.postalCode, p.provinceName
-                    FROM accounts AS a, provinces As p 
-                    WHERE a.active = 1 
-                    AND a.accountsID = ?`;
-    const params = [reqBody.userId]
+    const sql = `SELECT accountsID, firstName, lastName, email, password, homeAddress, homeCity, postalCode, provincesID
+                    FROM accounts
+                    WHERE active = 1 
+                    AND accountsID = ?`;
+    const params = [reqBody.accountsID]
     const rows = await execute(sql, params)
 
     if (rows[0] == undefined) {
@@ -47,14 +92,15 @@ const getByID = async (reqBody) => {
 
     if (rows[0].accountsID) {
         const user = {
-            userId: rows[0].accountsID,
+            accountsID: rows[0].accountsID,
             firstName: rows[0].firstName,
             lastName: rows[0].lastName,
             email: rows[0].email,
+            password: rows[0].password,
             homeAddress: rows[0].homeAddress,
             homeCity: rows[0].homeCity,
             postalCode: rows[0].postalCode,
-            provinceName: rows[0].provinceName
+            provincesID: rows[0].provincesID
         }
         return user
     }
@@ -66,9 +112,9 @@ const getByEmail = async (reqBody) => {
         throw Error(errors.join(" "))
     }
 
-    const sql = `SELECT a.accountsID, a.firstName, a.lastName, a.email, a.homeAddress, a.homeCity, a.postalCode, p.provinceName
-                    FROM accounts AS a, provinces As p
-                    WHERE a.active = 1 
+    const sql = `SELECT accountsID, firstName, lastName, email, password, homeAddress, homeCity, postalCode, provincesID
+                    FROM accounts  
+                    WHERE active = 1 
                     AND email = ?`;
     const params = [reqBody.email]
     const rows = await execute(sql, params)
@@ -79,14 +125,15 @@ const getByEmail = async (reqBody) => {
 
     if (rows[0].accountsID) {
         const user = {
-            userId: rows[0].accountsID,
+            accountsID: rows[0].accountsID,
             firstName: rows[0].firstName,
             lastName: rows[0].lastName,
             email: rows[0].email,
+            password: rows[0].password,
             homeAddress: rows[0].homeAddress,
             homeCity: rows[0].homeCity,
             postalCode: rows[0].postalCode,
-            provinceName: rows[0].provinceName
+            provincesID: rows[0].provincesID
         }
         return user
     }
@@ -99,26 +146,27 @@ const login = async (reqBody) => {
     }
 
     const sql = 'SELECT accountsID, firstName, lastName, email FROM accounts WHERE active = 1 AND email = ? AND password = ?';
-    const params = [email, md5(password)]
+    const params = [reqBody.email, md5(reqBody.password)]
     const rows = await execute(sql, params)
 
     if (rows[0] == undefined || !rows[0].accountsID) {
-        throw Error("Invalid Email or Password")
+        throw Error("System Error")
     }
 
     const user = {
-        userId: rows[0].accountsID,
+        accountsID: rows[0].accountsID,
         firstName: rows[0].firstName,
         lastName: rows[0].lastName,
         email: rows[0].email,
         token: generateToken(rows[0].accountsID)
     }
+
     return user
 }
 
 const validate = (reqBody, action) => {
     const errors = []
-    if (!reqBody.userId && ['userId'].includes(action)) {
+    if (!reqBody.accountsID && ['accountsID'].includes(action)) {
         errors.push("Account ID is not provided")
     }
     if (!reqBody.firstName && ['store'].includes(action)) {
@@ -149,4 +197,4 @@ const validate = (reqBody, action) => {
     return errors
 }
 
-module.exports = { store, getByID, getByEmail, login }
+module.exports = { store, update, getByID, getByEmail, login }

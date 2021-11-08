@@ -46,6 +46,23 @@ app.get('/api/v1/brands', async (req, res) => {
     res.json(brands)
 })
 
+app.get('/api/v1/users', restrict, async (req, res) => {
+    try {
+        const user = await User.getByID(req.body)
+        res.json(user)
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+app.patch('/api/v1/users', restrict, async (req, res) => {
+    try {
+        const user = await User.update(req.body)
+        res.json(user)
+    } catch (err) {
+        res.status(400).send({ error: err.message })
+    }
+})
 
 app.post('/api/v1/users', async (req, res) => {
     try{
@@ -58,14 +75,13 @@ app.post('/api/v1/users', async (req, res) => {
     }
 
     try {
-        const userId = await User.store(req.body)
-        const user = await User.getByID({ userId })
+        const accountsID = await User.store(req.body)
+        const user = await User.getByID({ accountsID })
         res.json(user)
     } catch(err){
         res.status(400).send({ error: err.message })
     }
 })
-
 
 app.post('/api/v1/users/login', async (req, res) => {
     try {
@@ -75,16 +91,6 @@ app.post('/api/v1/users/login', async (req, res) => {
         res.status(401).send({ error: err.message })
     }
 })
-
-app.get('/api/v1/users/account', restrict, async (req, res) => {
-    try{
-        const user = await User.getByID(req.body)
-        res.json(user)
-    } catch(err){
-        res.status(401).send({ error: err.message })
-    }
-})
-
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, console.log(`Server is running on port ${PORT}`))

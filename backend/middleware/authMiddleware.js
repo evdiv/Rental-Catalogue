@@ -6,7 +6,7 @@ const restrict = (req, res, next) => {
         try {
             const token = req.headers.authorization.split(' ')[1]
             const payload = jwt.verify(token, process.env.JWT_SECRET)
-            req.body.userId = payload.userId || 0
+            req.body.accountsID = payload.accountsID || 0
             next()
         } catch(err) {
             res.status(401).send({ error: err.message })
