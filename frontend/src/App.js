@@ -7,6 +7,7 @@ import HomeView from './views/HomeView';
 import BrandProductsView from './views/BrandProductsView';
 import ProductView from './views/ProductView';
 import CartView from './views/CartView';
+import LoginView from './views/LoginView';
 
 
 const App = () =>{
@@ -19,6 +20,7 @@ const App = () =>{
                 <Route path="/cart" component={CartView} />
                 <Route path="/brands/:id" component={BrandProductsView}/>
                 <Route path="/products/:id" component={ProductView} />
+                <Route path="/login" component={LoginView} />
             </main>
         </Container>
         <Footer />
