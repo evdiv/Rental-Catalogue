@@ -26,8 +26,8 @@ const accountLocalStorage = localStorage.getItem('account')
     : {}
 
 const initialState = {
-    cart: { cartProducts: cartLocalStorage},
-    account: {details: accountLocalStorage}
+    cart: { cartProducts: cartLocalStorage },
+    account: { details: accountLocalStorage }
 }
 
 const middleware = [thunk]

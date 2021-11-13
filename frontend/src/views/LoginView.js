@@ -10,7 +10,8 @@ const LoginView = () => {
 
     const dispatch = useDispatch()
 
-    const loginHandler = () => {
+    const loginHandler = (e) => {
+        e.preventDefault()
         dispatch(loginAccount(email, password))
     }
 
@@ -40,7 +41,7 @@ const LoginView = () => {
 
                    </Form.Group>
                    <Button 
-                       onClick={e => {e.preventDefault(); loginHandler();}}
+                       onClick={e => loginHandler(e)}
                         variant="primary" 
                         type="submit">
                        Submit
