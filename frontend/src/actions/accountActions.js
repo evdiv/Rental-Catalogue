@@ -4,7 +4,7 @@ export const registerAccount = (user) => async(dispatch, getState) => {
     try {
         dispatch({ type: "ACCOUNT_REGISTER_REQUEST"})
 
-        const data = await axios.post('/api/v1/users', user)
+        const { data } = await axios.post('/api/v1/users', user)
 
         dispatch({ type: "ACCOUNT_REGISTER_SUCCESS", payload: data})
 
@@ -28,4 +28,14 @@ export const loginAccount = (email, password) => async(dispatch, getState) => {
     } catch (error) {
         dispatch({ type: "ACCOUNT_LOGIN_FAIL", payload: error.message })
     }
+}
+
+export const updateAccount = (user) => async (dispatch, getState) => {
+
+}
+
+
+export const LogoutAccount = () => (dispatch) => {
+    dispatch({type: "ACCOUNT_LOGOUT"})
+    localStorage.setItem('account', JSON.stringify({}))
 }

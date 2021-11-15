@@ -4,6 +4,7 @@ const express = require('express')
 const Product = require('./models/productModel')
 const Brand = require('./models/brandModel')
 const User = require('./models/userModel')
+const Province = require('./models/provinceModel')
 
 const restrict = require('./middleware/authMiddleware')
 
@@ -44,6 +45,11 @@ app.get('/api/v1/products/:id', async (req, res) => {
 app.get('/api/v1/brands', async (req, res) => {
     const brands = await Brand.getAll()
     res.json(brands)
+})
+
+app.get('/api/v1/provinces', async (req, res) => {
+    const provinces = await Province.getAll()
+    res.json(provinces)
 })
 
 app.get('/api/v1/users', restrict, async (req, res) => {

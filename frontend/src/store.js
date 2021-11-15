@@ -5,6 +5,7 @@ import { featuredProductsReducer, onSaleProductsReducer, singleProductReducer, b
 import { allBrandsReducer, singleBrandReducer } from './reducers/brandReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { accountReducer } from './reducers/accountReducers'
+import { provinceReducer } from './reducers/provinceReducers'
 
 const reducer = combineReducers({
     featuredProducts: featuredProductsReducer,
@@ -14,7 +15,8 @@ const reducer = combineReducers({
     allBrands: allBrandsReducer,
     singleBrand: singleBrandReducer,
     cart: cartReducer,
-    account: accountReducer
+    account: accountReducer,
+    provinces: provinceReducer
 })
 
 const cartLocalStorage = localStorage.getItem('cartProducts')

@@ -2,13 +2,13 @@ const execute = require('../db')
 
 
 const getAll = async () => {
-    const sql = 'SELECT * FROM brands WHERE active = 1';
+    const sql = 'SELECT * FROM provinces';
     return await execute(sql)
 }
 
 const getByID = async(id) => {
     id = id || 0
-    const sql = 'SELECT * FROM brands WHERE active = 1 AND brandsID = ? LIMIT 20';
+    const sql = 'SELECT * FROM provinces WHERE provincesID = ?';
     const params = [id]
 
     return await execute(sql, params)

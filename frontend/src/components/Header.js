@@ -1,12 +1,18 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {LinkContainer} from 'react-router-bootstrap'
 import {Container, Nav, Navbar, Badge} from 'react-bootstrap'
+import { LogoutAccount } from '../actions/accountActions'
 
 const Header = () => {
-    const {cartProducts} = useSelector(state => state.cart)
+    const { cartProducts } = useSelector(state => state.cart)
+    const { details } = useSelector(state => state.account)
     const qty = cartProducts.reduce((total, p) => total + p.qty, 0)
 
+    const dispatch = useDispatch()
+    const logOutHandler = () => {
+        dispatch(LogoutAccount())
+    }
     return (
         <header>
             <Navbar bg="primary" variant="dark">
@@ -34,10 +40,14 @@ const Header = () => {
                     </Nav>
 
                     <Nav>
-                        <LinkContainer to="/login">
-                            <Nav.Link><i className="fas fa-user"></i> Sign In</Nav.Link>
-                        </LinkContainer>
-                        
+                        { details.accountsID 
+                            ? 
+                            <Nav.Link onClick={logOutHandler}><i className="fas fa-user"></i> Log Out</Nav.Link>
+                            :
+                            <LinkContainer to="/login">
+                                <Nav.Link><i className="fas fa-user"></i> Log In</Nav.Link>
+                            </LinkContainer>
+                        }
                         <LinkContainer to="/cart">
                             <Nav.Link><i className="fas fa-shopping-cart"></i> View Cart &nbsp;
                                 <Badge pill bg="danger"> {qty} </Badge>

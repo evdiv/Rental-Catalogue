@@ -12,7 +12,8 @@ export const accountReducer = (state = {details: {}}, action) => {
             return { details: action.payload, loading: false }
         case "ACCOUNT_LOGIN_FAIL":
             return { details: {}, loading: false, error: action.payload}
-
+        case "ACCOUNT_LOGOUT":
+            return { details: {}}
         default:
             return state;
     }

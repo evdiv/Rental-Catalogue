@@ -8,7 +8,8 @@ import BrandProductsView from './views/BrandProductsView';
 import ProductView from './views/ProductView';
 import CartView from './views/CartView';
 import LoginView from './views/LoginView';
-
+import RegisterAccountView from './views/RegisterAccountView';
+import MyAccountView from './views/MyAccountView';
 
 const App = () =>{
   return (
@@ -21,6 +22,8 @@ const App = () =>{
                 <Route path="/brands/:id" component={BrandProductsView}/>
                 <Route path="/products/:id" component={ProductView} />
                 <Route path="/login" component={LoginView} />
+                <Route path="/register" component={RegisterAccountView} />
+                <Route path="/account" component={MyAccountView} />
             </main>
         </Container>
         <Footer />
