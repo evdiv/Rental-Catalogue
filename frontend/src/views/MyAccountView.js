@@ -4,7 +4,7 @@ import { Row, Col, Form, Button} from 'react-bootstrap'
 import { ErrorsMsg } from '../components/ErrorsMsg'
 import { getProvinces } from '../actions/provincesAction'
 import { validateUser } from '../utils/validateUser'
-import { updateAccount } from '../actions/accountActions'
+import { getAccount, updateAccount } from '../actions/accountActions'
 
 const MyAccountView = () => {
 
@@ -19,11 +19,21 @@ const MyAccountView = () => {
     const [provincesId, setProvincesId] = useState(0)
 
     const { provinces } = useSelector(state => state)
+    const { details } = useSelector(state => state.account)
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getProvinces())
+        dispatch(getAccount())
+
+        setFirstName(details.firstName)
+        setLastName(details.lastName)
+        setHomeAddress(details.homeAddress)
+        setHomeCity(details.homeCity)
+        setPostalCode(details.postalCode)
+        setProvincesId(details.provincesId)
+
     }, [dispatch])
 
     const UpdateAccountHandler = (e) => {
@@ -54,6 +64,7 @@ const MyAccountView = () => {
                        <Form.Group as={Col}>
                            <Form.Label>Your First Name</Form.Label>
                            <Form.Control 
+                                value={firstName}
                                 placeholder="Your first name" 
                                 onChange = {(e) => {setFirstName(e.target.value)}} />
                        </Form.Group>
@@ -61,6 +72,7 @@ const MyAccountView = () => {
                        <Form.Group as={Col}>
                            <Form.Label>Your Last Name</Form.Label>
                            <Form.Control 
+                                value={lastName}
                                 placeholder="Your last name" 
                                 onChange={(e) => {setLastName(e.target.value)}} />
                        </Form.Group>
@@ -87,6 +99,7 @@ const MyAccountView = () => {
                    <Form.Group className="mb-3">
                        <Form.Label>Your Home Address</Form.Label>
                        <Form.Control 
+                            value={homeAddress}
                             placeholder="Your home address" 
                             onChange={(e) => setHomeAddress(e.target.value)} />
                    </Form.Group>
@@ -95,6 +108,7 @@ const MyAccountView = () => {
                        <Form.Group as={Col}>
                            <Form.Label>Your Home City</Form.Label>
                            <Form.Control 
+                                value={homeCity}
                                 placeholder="Your home city" 
                                 onChange={(e) => setHomeCity(e.target.value)} />
                        </Form.Group>
@@ -105,15 +119,19 @@ const MyAccountView = () => {
                                 defaultValue="Choose..."
                                 onChange={(e) => setProvincesId(e.target.value)}>
                                {provinces.map( province => {
-                                   return (<option key={province.ProvincesId}
-                                                value={province.ProvincesId}>{province.ProvinceName}</option>)
+                                   return (<option 
+                                                key={province.ProvincesId}
+                                                value={province.ProvincesId}
+                                                selected={province.ProvincesId === provincesId}>
+                                            {province.ProvinceName}</option>)
                                })}
                            </Form.Select>
-                       </Form.Group>
+                       </Form.Group> 
 
                        <Form.Group as={Col}>
                            <Form.Label>Postal Code</Form.Label>
                            <Form.Control 
+                                value={postalCode}
                                 placeholder="Your postal code" 
                                 onChange={(e) => setPostalCode(e.target.value)} />
                        </Form.Group>

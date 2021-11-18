@@ -30,8 +30,39 @@ export const loginAccount = (email, password) => async(dispatch, getState) => {
     }
 }
 
-export const updateAccount = (user) => async (dispatch, getState) => {
+export const getAccount = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: "ACCOUNT_GET_REQUEST" })
 
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${getState().account.details.token}`
+            }
+        }
+        const { data } = await axios.get('/api/v1/users', config)
+
+        dispatch({ type: "ACCOUNT_GET_SUCCESS", payload: data })
+
+    } catch (error) {
+        dispatch({ type: "ACCOUNT_GET_FAIL", payload: error.message })
+    }
+}
+
+
+export const updateAccount = (user) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: "ACCOUNT_GET_REQUEST" })
+
+        const { data } = await axios.post('/api/v1/users', user)
+
+        dispatch({ type: "ACCOUNT_GET_SUCCESS", payload: data })
+
+        localStorage.setItem('account', JSON.stringify(getState().account.details))
+
+    } catch (error) {
+        dispatch({ type: "ACCOUNT_GET_FAIL", payload: error.message })
+    }
 }
 
 

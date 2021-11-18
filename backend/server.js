@@ -61,7 +61,7 @@ app.get('/api/v1/users', restrict, async (req, res) => {
     }
 })
 
-app.patch('/api/v1/users', restrict, async (req, res) => {
+app.put('/api/v1/users', restrict, async (req, res) => {
     try {
         const user = await User.update(req.body)
         res.json(user)
