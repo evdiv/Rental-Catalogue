@@ -27,9 +27,13 @@ const accountLocalStorage = localStorage.getItem('account')
     ? JSON.parse(localStorage.getItem('account'))
     : {}
 
+const tokenLocalStorage = localStorage.getItem('token')
+    ? JSON.parse(localStorage.getItem('token'))
+    : ''
+
 const initialState = {
     cart: { cartProducts: cartLocalStorage },
-    account: { details: accountLocalStorage }
+    account: { details: accountLocalStorage, token: tokenLocalStorage}
 }
 
 const middleware = [thunk]

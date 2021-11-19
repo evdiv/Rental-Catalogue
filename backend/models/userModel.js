@@ -25,7 +25,11 @@ const store = async(reqBody) => {
     if (!result.insertId){
         throw Error("System Error")
     }
-    return result.insertId
+
+    const accountsID = result.insertId
+    const token = generateToken(accountsID)
+
+    return { accountsID, token}
 }
 
 const update = async (reqBody) => {
@@ -33,7 +37,6 @@ const update = async (reqBody) => {
     const updatedUser = {
         firstName: reqBody.firstName ? reqBody.firstName : user.firstName,
         lastName: reqBody.lastName ? reqBody.lastName : user.lastName,
-        email: reqBody.email ? reqBody.email : user.email,
         password: reqBody.password ? md5(reqBody.password) : user.password,
         homeAddress: reqBody.homeAddress ? reqBody.homeAddress : user.homeAddress,
         homeCity: reqBody.homeCity ? reqBody.homeCity : user.homeCity,
@@ -44,7 +47,6 @@ const update = async (reqBody) => {
     const sql = `UPDATE accounts SET 
                         firstName = ?, 
                         lastName = ?, 
-                        email = ?, 
                         password = ?, 
                         homeAddress = ?, 
                         homeCity = ?, 
@@ -55,7 +57,6 @@ const update = async (reqBody) => {
     const params = [
         updatedUser.firstName,
         updatedUser.lastName,
-        updatedUser.email,
         updatedUser.password,
         updatedUser.homeAddress,
         updatedUser.homeCity,
@@ -63,8 +64,6 @@ const update = async (reqBody) => {
         updatedUser.provincesID
     ]
     const result = await execute(sql, params)
-
-    console.log(result)
 
     if (!result.affectedRows) {
         throw Error("System Error")
@@ -158,10 +157,10 @@ const login = async (reqBody) => {
         firstName: rows[0].firstName,
         lastName: rows[0].lastName,
         email: rows[0].email,
-        token: generateToken(rows[0].accountsID)
     }
+    const token = generateToken(rows[0].accountsID)
 
-    return user
+    return {user, token}
 }
 
 const validate = (reqBody, action) => {

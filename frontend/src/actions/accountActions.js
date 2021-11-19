@@ -24,6 +24,7 @@ export const loginAccount = (email, password) => async(dispatch, getState) => {
         dispatch({ type: "ACCOUNT_LOGIN_SUCCESS", payload: data })
 
         localStorage.setItem('account', JSON.stringify(getState().account.details))
+        localStorage.setItem('token', JSON.stringify(getState().account.token))
 
     } catch (error) {
         dispatch({ type: "ACCOUNT_LOGIN_FAIL", payload: error.message })
@@ -37,7 +38,7 @@ export const getAccount = () => async (dispatch, getState) => {
         const config = {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${getState().account.details.token}`
+                Authorization: `Bearer ${getState().account.token}`
             }
         }
         const { data } = await axios.get('/api/v1/users', config)
@@ -52,21 +53,29 @@ export const getAccount = () => async (dispatch, getState) => {
 
 export const updateAccount = (user) => async (dispatch, getState) => {
     try {
-        dispatch({ type: "ACCOUNT_GET_REQUEST" })
+        dispatch({ type: "ACCOUNT_UPDATE_REQUEST" })
 
-        const { data } = await axios.post('/api/v1/users', user)
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${getState().account.token}`
+            }
+        }
+        const { data } = await axios.put('/api/v1/users', user, config)
 
-        dispatch({ type: "ACCOUNT_GET_SUCCESS", payload: data })
+        dispatch({ type: "ACCOUNT_UPDATE_SUCCESS", payload: data })
 
         localStorage.setItem('account', JSON.stringify(getState().account.details))
 
     } catch (error) {
-        dispatch({ type: "ACCOUNT_GET_FAIL", payload: error.message })
+        dispatch({ type: "ACCOUNT_UPDATE_FAIL", payload: error.message })
     }
 }
 
 
 export const LogoutAccount = () => (dispatch) => {
     dispatch({type: "ACCOUNT_LOGOUT"})
+
     localStorage.setItem('account', JSON.stringify({}))
+    localStorage.setItem('token', JSON.stringify(''))
 }

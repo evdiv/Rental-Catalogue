@@ -52,6 +52,7 @@ app.get('/api/v1/provinces', async (req, res) => {
     res.json(provinces)
 })
 
+// Get User
 app.get('/api/v1/users', restrict, async (req, res) => {
     try {
         const user = await User.getByID(req.body)
@@ -61,6 +62,7 @@ app.get('/api/v1/users', restrict, async (req, res) => {
     }
 })
 
+//Update User
 app.put('/api/v1/users', restrict, async (req, res) => {
     try {
         const user = await User.update(req.body)
@@ -70,7 +72,8 @@ app.put('/api/v1/users', restrict, async (req, res) => {
     }
 })
 
-app.post('/api/v1/users', async (req, res) => {
+//Create a new User
+app.post('/api/v1/users', async (req, res) => { 
     try{
         const user = await User.getByEmail(req.body)
         if (user) {
@@ -81,18 +84,20 @@ app.post('/api/v1/users', async (req, res) => {
     }
 
     try {
-        const accountsID = await User.store(req.body)
+        const {accountsID, token} = await User.store(req.body)
         const user = await User.getByID({ accountsID })
-        res.json(user)
+        res.json({user, token})
+
     } catch(err){
         res.status(400).send({ error: err.message })
     }
 })
 
+//LogIn a User
 app.post('/api/v1/users/login', async (req, res) => {
     try {
-        const user = await User.login(req.body)
-        res.json(user)
+        const { user, token } = await User.login(req.body)
+        res.json({ user, token })
     } catch (err) {
         res.status(401).send({ error: err.message })
     }
@@ -100,5 +105,3 @@ app.post('/api/v1/users/login', async (req, res) => {
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, console.log(`Server is running on port ${PORT}`))
-
-

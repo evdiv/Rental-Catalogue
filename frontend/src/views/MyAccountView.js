@@ -18,10 +18,10 @@ const MyAccountView = () => {
     const [postalCode, setPostalCode] = useState('')
     const [provincesId, setProvincesId] = useState(0)
 
+    const dispatch = useDispatch()
+
     const { provinces } = useSelector(state => state)
     const { details } = useSelector(state => state.account)
-
-    const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getProvinces())
@@ -34,7 +34,12 @@ const MyAccountView = () => {
         setPostalCode(details.postalCode)
         setProvincesId(details.provincesId)
 
-    }, [dispatch])
+    }, [dispatch, details.firstName, 
+            details.lastName, 
+            details.homeCity, 
+            details.postalCode, 
+            details.homeAddress,
+            details.provincesId])
 
     const UpdateAccountHandler = (e) => {
         e.preventDefault()
@@ -47,7 +52,7 @@ const MyAccountView = () => {
                 homeCity, 
                 postalCode,
                 provincesId
-            })
+            }, 'update')
             dispatch(updateAccount(user))
         } catch(error) {
             setError(error.message)
@@ -116,15 +121,12 @@ const MyAccountView = () => {
                        <Form.Group as={Col}>
                            <Form.Label>Your Province</Form.Label>
                            <Form.Select 
-                                defaultValue="Choose..."
+                               defaultValue={provincesId}
                                 onChange={(e) => setProvincesId(e.target.value)}>
                                {provinces.map( province => {
-                                   return (<option 
-                                                key={province.ProvincesId}
-                                                value={province.ProvincesId}
-                                                selected={province.ProvincesId === provincesId}>
+                                   return (<option key={province.ProvincesId} value={province.ProvincesId}>
                                             {province.ProvinceName}</option>)
-                               })}
+                               })} 
                            </Form.Select>
                        </Form.Group> 
 

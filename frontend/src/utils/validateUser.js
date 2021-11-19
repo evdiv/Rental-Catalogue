@@ -1,4 +1,6 @@
-export const validateUser = (user) => {
+export const validateUser = (user, action) => {
+    action = action || 'register'
+
     //First Name
     if (!user.firstName || user.firstName === '') {
         throw new Error("First Name cannot be empty")
@@ -22,18 +24,18 @@ export const validateUser = (user) => {
     }
 
     //Password
-    if (!user.password || user.password === '') {
+    if (action === 'register' && (!user.password || user.password === '')) {
         throw new Error("Password cannot be empty")
     }
 
-    if (typeof user.password !== "undefined") {
+    if (user.password !== '' && typeof user.password !== "undefined") {
         if (user.password !== user.confPassword) {
             throw new Error("Password and Confirmation Password don't match")
         }
     }
 
     //Email
-    if (!user.email || user.email === '') {
+    if (action === 'register' && (!user.email || user.email === '')) {
         throw new Error("Email cannot be empty")
     }
 
