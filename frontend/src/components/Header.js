@@ -41,11 +41,15 @@ const Header = () => {
 
                     <Nav>
                         { details.accountsID 
-                            ? 
-                            <Nav.Link onClick={logOutHandler}><i className="fas fa-user"></i> Log Out</Nav.Link>
+                            ? <>
+                            <LinkContainer to="/account">
+                                <Nav.Link><i className="fas fa-user"></i> My Account</Nav.Link>
+                            </LinkContainer>
+                                <Nav.Link onClick={logOutHandler}><i className="fa-solid fa-right-from-bracket"></i> Log Out</Nav.Link>
+                            </>
                             :
                             <LinkContainer to="/login">
-                                <Nav.Link><i className="fas fa-user"></i> Log In</Nav.Link>
+                                <Nav.Link><i className="fas fa-sign-out"></i> Log In</Nav.Link>
                             </LinkContainer>
                         }
                         <LinkContainer to="/cart">

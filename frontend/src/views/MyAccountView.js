@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Form, Button} from 'react-bootstrap'
-import { ErrorsMsg } from '../components/ErrorsMsg'
+import { AlertMsg } from '../components/AlertMsg'
 import { getProvinces } from '../actions/provincesAction'
 import { validateUser } from '../utils/validateUser'
 import { getAccount, updateAccount } from '../actions/accountActions'
@@ -9,6 +9,7 @@ import { getAccount, updateAccount } from '../actions/accountActions'
 const MyAccountView = (props) => {
 
     const [error, setError] = useState('')
+    const [confirmation, setConfirmation] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [password, setPassword] = useState('')
@@ -24,10 +25,11 @@ const MyAccountView = (props) => {
     const { details } = useSelector(state => state.account)
 
     useEffect(() => {
-
-        dispatch(getAccount())
         dispatch(getProvinces())
+        dispatch(getAccount())
+    }, [])
 
+    useEffect(() => {
         setFirstName(details.firstName)
         setLastName(details.lastName)
         setHomeAddress(details.homeAddress)
@@ -38,16 +40,12 @@ const MyAccountView = (props) => {
         if (details.email === undefined) {
             props.history.push('/login')
         }
-
-    }, [dispatch, 
-        props.history, 
-        details.firstName, 
+    }, [details.firstName, 
         details.lastName, 
-        details.email,
+        details.homeAddress, 
         details.homeCity, 
         details.postalCode, 
-        details.homeAddress,
-        details.provincesId])
+        details.provincesId ])
 
     const UpdateAccountHandler = (e) => {
         e.preventDefault()
@@ -62,6 +60,8 @@ const MyAccountView = (props) => {
                 provincesId
             }, 'update')
             dispatch(updateAccount(user))
+            setError('')
+            setConfirmation('Your Account has been updated')
         } catch(error) {
             setError(error.message)
         }
@@ -71,7 +71,8 @@ const MyAccountView = (props) => {
        <Row className="justify-content-md-center">
             <Col md={8}>
                <h3>My Account</h3>
-                {error !== ''  && <ErrorsMsg error={error} />}
+                {error !== ''  && <AlertMsg msg={error} variant="danger" />}
+                {confirmation !== '' && <AlertMsg msg={confirmation} variant="success" />}
                <Form>
                    <Row className="mb-3">
                        <Form.Group as={Col}>
@@ -133,6 +134,7 @@ const MyAccountView = (props) => {
                            <Form.Select 
                                 value={provincesId}
                                 onChange={(e) => setProvincesId(e.target.value)}>
+                                <option value='0'>Choose your Province ...</option>
                                {provinces.map( province => {
                                    return (<option key={province.ProvincesId} value={province.ProvincesId}>
                                             {province.ProvinceName}</option>)

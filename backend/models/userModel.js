@@ -80,7 +80,6 @@ const getByID = async (reqBody) => {
     if (errors.length > 0) {
         throw Error(errors.join(" "))
     }
-
     const sql = `SELECT accountsID, firstName, lastName, email, password, homeAddress, homeCity, postalCode, provincesID
                     FROM accounts
                     WHERE active = 1 
@@ -88,24 +87,10 @@ const getByID = async (reqBody) => {
     const params = [reqBody.accountsID]
     const rows = await execute(sql, params)
 
-    if (rows[0] == undefined) {
+    if (rows[0] == undefined || !rows[0].accountsID) {
         throw Error("Invalid Id")
     }
-
-    if (rows[0].accountsID) {
-        const user = {
-            accountsID: rows[0].accountsID,
-            firstName: rows[0].firstName,
-            lastName: rows[0].lastName,
-            password: rows[0].password,
-            email: rows[0].email,
-            homeAddress: rows[0].homeAddress,
-            homeCity: rows[0].homeCity,
-            postalCode: rows[0].postalCode,
-            provincesID: rows[0].provincesID
-        }
-        return user
-    }
+    return rows[0]
 }
 
 const getByEmail = async (reqBody) => {
@@ -121,24 +106,10 @@ const getByEmail = async (reqBody) => {
     const params = [reqBody.email]
     const rows = await execute(sql, params)
 
-    if (rows[0] == undefined) {
-        return
+    if (rows[0] == undefined || !rows[0].accountsID) {
+        throw Error("System Error")
     }
-
-    if (rows[0].accountsID) {
-        const user = {
-            accountsID: rows[0].accountsID,
-            firstName: rows[0].firstName,
-            lastName: rows[0].lastName,
-            email: rows[0].email,
-            password: rows[0].password,
-            homeAddress: rows[0].homeAddress,
-            homeCity: rows[0].homeCity,
-            postalCode: rows[0].postalCode,
-            provincesID: rows[0].provincesID
-        }
-        return user
-    }
+    return {user: rows[0]}
 }
 
 const login = async (reqBody) => {
@@ -147,7 +118,12 @@ const login = async (reqBody) => {
         throw Error(errors.join(" "))
     }
 
-    const sql = 'SELECT accountsID, firstName, lastName, email FROM accounts WHERE active = 1 AND email = ? AND password = ?';
+    const sql = `SELECT accountsID, firstName, lastName, email, homeAddress, homeCity, postalCode, provincesID
+                    FROM accounts 
+                    WHERE active = 1 
+                    AND email = ? 
+                    AND password = ?`;
+
     const params = [reqBody.email, md5(reqBody.password)]
     const rows = await execute(sql, params)
 
@@ -155,15 +131,9 @@ const login = async (reqBody) => {
         throw Error("System Error")
     }
 
-    const user = {
-        accountsID: rows[0].accountsID,
-        firstName: rows[0].firstName,
-        lastName: rows[0].lastName,
-        email: rows[0].email,
-    }
     const token = generateToken(rows[0].accountsID)
 
-    return {user, token}
+    return { user: rows[0], token}
 }
 
 const validate = (reqBody, action) => {

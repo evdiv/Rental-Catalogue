@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Form, Button} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-import { ErrorsMsg } from '../components/ErrorsMsg'
+import { AlertMsg } from '../components/AlertMsg'
 import { getProvinces } from '../actions/provincesAction'
 import { registerAccount } from '../actions/accountActions'
 import { validateUser } from '../utils/validateUser'
@@ -24,6 +24,10 @@ const RegisterAccountView = (props) => {
     const { details } = useSelector(state => state.account)
 
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        setError('')
+    }, [firstName, lastName, homeAddress, homeCity, postalCode, provincesId])
 
     useEffect(() => {
         if (details.email !== undefined){
@@ -55,7 +59,7 @@ const RegisterAccountView = (props) => {
        <Row className="justify-content-md-center">
             <Col md={8}>
                <h3>Register Account</h3>
-                {error !== ''  && <ErrorsMsg error={error} />}
+                {error !== ''  && <AlertMsg error={error} variant="danger" />}
                <Form>
                    <Row className="mb-3">
                        <Form.Group as={Col}>
