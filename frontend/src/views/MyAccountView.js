@@ -6,7 +6,7 @@ import { getProvinces } from '../actions/provincesAction'
 import { validateUser } from '../utils/validateUser'
 import { getAccount, updateAccount } from '../actions/accountActions'
 
-const MyAccountView = () => {
+const MyAccountView = (props) => {
 
     const [error, setError] = useState('')
     const [firstName, setFirstName] = useState('')
@@ -24,8 +24,9 @@ const MyAccountView = () => {
     const { details } = useSelector(state => state.account)
 
     useEffect(() => {
-        dispatch(getProvinces())
+
         dispatch(getAccount())
+        dispatch(getProvinces())
 
         setFirstName(details.firstName)
         setLastName(details.lastName)
@@ -34,12 +35,19 @@ const MyAccountView = () => {
         setPostalCode(details.postalCode)
         setProvincesId(details.provincesId)
 
-    }, [dispatch, details.firstName, 
-            details.lastName, 
-            details.homeCity, 
-            details.postalCode, 
-            details.homeAddress,
-            details.provincesId])
+        if (details.email === undefined) {
+            props.history.push('/login')
+        }
+
+    }, [dispatch, 
+        props.history, 
+        details.firstName, 
+        details.lastName, 
+        details.email,
+        details.homeCity, 
+        details.postalCode, 
+        details.homeAddress,
+        details.provincesId])
 
     const UpdateAccountHandler = (e) => {
         e.preventDefault()
@@ -87,6 +95,7 @@ const MyAccountView = () => {
                        <Form.Group as={Col}>
                            <Form.Label>Password</Form.Label>
                            <Form.Control 
+                                value={password}
                                 type="password" 
                                 placeholder="Enter your password" 
                                 onChange={(e) => setPassword(e.target.value)} />
@@ -95,13 +104,14 @@ const MyAccountView = () => {
                        <Form.Group as={Col}>
                            <Form.Label>Confirm Password</Form.Label>
                            <Form.Control 
+                                value={confPassword}
                                 type="password" 
                                 placeholder="Confirm password" 
                                 onChange={(e) => setConfPassword(e.target.value)} />
                        </Form.Group>
                    </Row>
 
-                   <Form.Group className="mb-3">
+                   <Form.Group as={Col}>
                        <Form.Label>Your Home Address</Form.Label>
                        <Form.Control 
                             value={homeAddress}
@@ -121,7 +131,7 @@ const MyAccountView = () => {
                        <Form.Group as={Col}>
                            <Form.Label>Your Province</Form.Label>
                            <Form.Select 
-                               defaultValue={provincesId}
+                                value={provincesId}
                                 onChange={(e) => setProvincesId(e.target.value)}>
                                {provinces.map( province => {
                                    return (<option key={province.ProvincesId} value={province.ProvincesId}>

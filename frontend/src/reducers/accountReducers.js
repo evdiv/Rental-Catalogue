@@ -19,7 +19,7 @@ export const accountReducer = (state = {details: {}, token: ''}, action) => {
         case "ACCOUNT_UPDATE_REQUEST":
             return { ...state, loading: true }
         case "ACCOUNT_UPDATE_SUCCESS":
-            return { details: action.payload, loading: false }
+            return { ...state, details: action.payload, loading: false }
         case "ACCOUNT_UPDATE_FAIL":
             return { ...state, loading: false, error: action.payload }
 

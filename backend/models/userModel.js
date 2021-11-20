@@ -35,13 +35,15 @@ const store = async(reqBody) => {
 const update = async (reqBody) => {
     const user = await getByID(reqBody)
     const updatedUser = {
-        firstName: reqBody.firstName ? reqBody.firstName : user.firstName,
-        lastName: reqBody.lastName ? reqBody.lastName : user.lastName,
-        password: reqBody.password ? md5(reqBody.password) : user.password,
-        homeAddress: reqBody.homeAddress ? reqBody.homeAddress : user.homeAddress,
-        homeCity: reqBody.homeCity ? reqBody.homeCity : user.homeCity,
-        postalCode: reqBody.postalCode ? reqBody.postalCode : user.postalCode,
-        provincesID: reqBody.provincesID ? reqBody.provincesID : user.provincesID
+        accountsID: user.accountsID,
+        email: user.email,
+        firstName: (reqBody.firstName && reqBody.firstName !== '') ? reqBody.firstName : user.firstName,
+        lastName: (reqBody.lastName && reqBody.lastName !== '') ? reqBody.lastName : user.lastName,
+        password: (reqBody.password && reqBody.password !== '') ? md5(reqBody.password) : user.password,
+        homeAddress: (reqBody.homeAddress && reqBody.homeAddress !== '') ? reqBody.homeAddress : user.homeAddress,
+        homeCity: (reqBody.homeCity && reqBody.homeCity !== '') ? reqBody.homeCity : user.homeCity,
+        postalCode: (reqBody.postalCode && reqBody.postalCode !== '') ? reqBody.postalCode : user.postalCode,
+        provincesID: (reqBody.provincesID && reqBody.provincesID !== 0) ? reqBody.provincesID : user.provincesID
     }
 
     const sql = `UPDATE accounts SET 
@@ -63,6 +65,7 @@ const update = async (reqBody) => {
         updatedUser.postalCode,
         updatedUser.provincesID
     ]
+
     const result = await execute(sql, params)
 
     if (!result.affectedRows) {
@@ -94,8 +97,8 @@ const getByID = async (reqBody) => {
             accountsID: rows[0].accountsID,
             firstName: rows[0].firstName,
             lastName: rows[0].lastName,
-            email: rows[0].email,
             password: rows[0].password,
+            email: rows[0].email,
             homeAddress: rows[0].homeAddress,
             homeCity: rows[0].homeCity,
             postalCode: rows[0].postalCode,

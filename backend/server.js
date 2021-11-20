@@ -55,7 +55,7 @@ app.get('/api/v1/provinces', async (req, res) => {
 // Get User
 app.get('/api/v1/users', restrict, async (req, res) => {
     try {
-        const user = await User.getByID(req.body)
+        const {password, ...user} = await User.getByID(req.body)
         res.json(user)
     } catch (err) {
         res.status(401).send({ error: err.message })
@@ -85,7 +85,7 @@ app.post('/api/v1/users', async (req, res) => {
 
     try {
         const {accountsID, token} = await User.store(req.body)
-        const user = await User.getByID({ accountsID })
+        const {password, ...user} = await User.getByID({ accountsID })
         res.json({user, token})
 
     } catch(err){
