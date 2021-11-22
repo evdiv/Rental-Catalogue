@@ -10,6 +10,9 @@ import CartView from './views/CartView';
 import LoginView from './views/LoginView';
 import RegisterAccountView from './views/RegisterAccountView';
 import MyAccountView from './views/MyAccountView';
+import CheckoutView from './views/CheckoutView';
+import OrderView from './views/OrderView';
+import ConfirmationView from './views/ConfirmationView';
 
 const App = () =>{
   return (
@@ -24,6 +27,9 @@ const App = () =>{
                 <Route path="/login" component={LoginView} />
                 <Route path="/register" component={RegisterAccountView} />
                 <Route path="/account" component={MyAccountView} />
+                <Route path="/checkout" component={CheckoutView} />
+                <Route path="/order" component={OrderView} />
+                <Route path="/confirmation" component={ConfirmationView} />
             </main>
         </Container>
         <Footer />

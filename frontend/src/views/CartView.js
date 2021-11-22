@@ -43,7 +43,7 @@ const CartView = () => {
                                         </td>
                                         <td>{i.qty}</td>
                                         <td><RentalTerm term={i.days} /></td>
-                                        <td><Badge pill bg="danger" 
+                                        <td><Badge pill bg="danger" style={{cursor: 'pointer'}}
                                             onClick={() => {
                                                 removeFromCartHandler({ id: i.product.ProductsID, days: i.days, qty: i.qty})
                                             }}>
@@ -62,7 +62,9 @@ const CartView = () => {
                {cartProducts.length > 0 && 
                     <Alert variant={'warning'}>
                    <p>Cart subtotal ({totalQty} {totalQty > 1 ? 'items' : 'item'}):  <b>${totalPrice.toFixed(2)}</b></p>
-                        <Button>Proceed to Checkout</Button>
+                        <Link to='/checkout'>
+                            <Button size="lg">Proceed to Checkout</Button>
+                        </Link>
                     </Alert>
                }
             </Col>

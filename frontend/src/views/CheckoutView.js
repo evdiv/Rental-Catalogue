@@ -6,17 +6,14 @@ import { getProvinces } from '../actions/provincesAction'
 import { validateUser } from '../utils/validateUser'
 import { getAccount, updateAccount } from '../actions/accountActions'
 
-const MyAccountView = (props) => {
+const CheckoutView = (props) => {
 
     const { provinces } = useSelector(state => state)
     const { details } = useSelector(state => state.account)
 
     const [error, setError] = useState('')
-    const [confirmation, setConfirmation] = useState('')
     const [firstName, setFirstName] = useState(details.firstName)
     const [lastName, setLastName] = useState(details.lastName)
-    const [password, setPassword] = useState('')
-    const [confPassword, setConfPassword] = useState('')
     const [homeAddress, setHomeAddress] = useState(details.homeAddress)
     const [homeCity, setHomeCity] = useState(details.homeCity)
     const [postalCode, setPostalCode] = useState(details.postalCode)
@@ -40,8 +37,6 @@ const MyAccountView = (props) => {
         try{
             const user = validateUser({ firstName, 
                 lastName, 
-                password, 
-                confPassword, 
                 homeAddress, 
                 homeCity, 
                 postalCode,
@@ -49,7 +44,7 @@ const MyAccountView = (props) => {
             }, 'update')
             dispatch(updateAccount(user))
             setError('')
-            setConfirmation('Your Account has been updated')
+            props.history.push('/order')
         } catch(error) {
             setError(error.message)
         }
@@ -58,9 +53,8 @@ const MyAccountView = (props) => {
    return (
        <Row className="justify-content-md-center">
             <Col md={8}>
-               <h3>My Account</h3>
+               <h3>Confirm your Shipping Address</h3>
                 {error !== ''  && <AlertMsg msg={error} variant="danger" />}
-                {confirmation !== '' && <AlertMsg msg={confirmation} variant="success" />}
                <Form>
                    <Row className="mb-3">
                        <Form.Group as={Col}>
@@ -77,26 +71,6 @@ const MyAccountView = (props) => {
                                 value={lastName}
                                 placeholder="Your last name" 
                                 onChange={(e) => {setLastName(e.target.value)}} />
-                       </Form.Group>
-                   </Row>
-
-                   <Row className="mb-3">
-                       <Form.Group as={Col}>
-                           <Form.Label>Password</Form.Label>
-                           <Form.Control 
-                                value={password}
-                                type="password" 
-                                placeholder="Enter your password" 
-                                onChange={(e) => setPassword(e.target.value)} />
-                       </Form.Group>
-
-                       <Form.Group as={Col}>
-                           <Form.Label>Confirm Password</Form.Label>
-                           <Form.Control 
-                                value={confPassword}
-                                type="password" 
-                                placeholder="Confirm password" 
-                                onChange={(e) => setConfPassword(e.target.value)} />
                        </Form.Group>
                    </Row>
 
@@ -118,6 +92,14 @@ const MyAccountView = (props) => {
                        </Form.Group>
 
                        <Form.Group as={Col}>
+                           <Form.Label>Postal Code</Form.Label>
+                           <Form.Control
+                               value={postalCode}
+                               placeholder="Your postal code"
+                               onChange={(e) => setPostalCode(e.target.value)} />
+                       </Form.Group>
+
+                        <Form.Group as={Col}>
                            <Form.Label>Your Province</Form.Label>
                            <Form.Select 
                                 value={provincesId}
@@ -128,27 +110,24 @@ const MyAccountView = (props) => {
                                             {province.ProvinceName}</option>)
                                })} 
                            </Form.Select>
-                       </Form.Group> 
+                        </Form.Group> 
+                    </Row>
 
-                       <Form.Group as={Col}>
-                           <Form.Label>Postal Code</Form.Label>
-                           <Form.Control 
-                                value={postalCode}
-                                placeholder="Your postal code" 
-                                onChange={(e) => setPostalCode(e.target.value)} />
-                       </Form.Group>
-                   </Row>
-            
-                   <Button 
-                        onClick={e => UpdateAccountHandler(e)}
-                        variant="primary" 
-                        type="submit">
-                       Update Account
-                   </Button>
+                   <Row className="justify-content-md-center" style={{marginTop: '50px'}}>
+                       <Col md="auto">
+                            <Button 
+                                    onClick={e => UpdateAccountHandler(e)}
+                                    variant="success" 
+                                    size="lg"
+                                    type="submit">
+                                View Order Summary
+                            </Button>
+                       </Col>
+                    </Row>
                </Form>
             </Col>
        </Row>
    )
 }
 
-export default MyAccountView
+export default CheckoutView

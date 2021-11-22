@@ -80,10 +80,12 @@ const getByID = async (reqBody) => {
     if (errors.length > 0) {
         throw Error(errors.join(" "))
     }
-    const sql = `SELECT accountsID, firstName, lastName, email, password, homeAddress, homeCity, postalCode, provincesID
-                    FROM accounts
-                    WHERE active = 1 
-                    AND accountsID = ?`;
+    const sql = `SELECT a.accountsID, a.firstName, a.lastName, a.email, a.password, a.homeAddress, 
+                a.homeCity, a.postalCode, a.provincesID, p.provinceName
+                    FROM accounts AS a, provinces AS p
+                    WHERE a.provincesID = p.provincesID
+                    AND a.active = 1 
+                    AND a.accountsID = ?`;
     const params = [reqBody.accountsID]
     const rows = await execute(sql, params)
 
@@ -99,10 +101,12 @@ const getByEmail = async (reqBody) => {
         throw Error(errors.join(" "))
     }
 
-    const sql = `SELECT accountsID, firstName, lastName, email, password, homeAddress, homeCity, postalCode, provincesID
-                    FROM accounts  
-                    WHERE active = 1 
-                    AND email = ?`;
+    const sql = `SELECT a.accountsID, a.firstName, a.lastName, a.email, a.password, a.homeAddress,
+                a.homeCity, a.postalCode, a.provincesID, p.provinceName
+                    FROM accounts AS a, provinces AS p
+                    WHERE a.provincesID = p.provincesID
+                    AND a.active = 1
+                    AND a.email = ?`;
     const params = [reqBody.email]
     const rows = await execute(sql, params)
 
@@ -118,11 +122,13 @@ const login = async (reqBody) => {
         throw Error(errors.join(" "))
     }
 
-    const sql = `SELECT accountsID, firstName, lastName, email, homeAddress, homeCity, postalCode, provincesID
-                    FROM accounts 
-                    WHERE active = 1 
-                    AND email = ? 
-                    AND password = ?`;
+    const sql = `SELECT a.accountsID, a.firstName, a.lastName, a.email, a.password, a.homeAddress,
+                a.homeCity, a.postalCode, a.provincesID, p.provinceName 
+                    FROM accounts AS a, provinces AS p
+                    WHERE a.provincesID = p.provincesID 
+                    AND a.active = 1 
+                    AND a.email = ? 
+                    AND a.password = ?`;
 
     const params = [reqBody.email, md5(reqBody.password)]
     const rows = await execute(sql, params)

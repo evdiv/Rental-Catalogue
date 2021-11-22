@@ -1,23 +1,40 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Image} from 'react-bootstrap'
 import { getSingleProduct } from '../actions/productActions'
+import { hideCartConfirmation } from '../actions/cartActions'
 import Breadcrumbs from '../components/Breadcrumbs'
 import AddToCart from '../components/AddToCart'
+import { AlertMsg } from '../components/AlertMsg'
 
 const ProductView = ({match}) => {
 
+    const [confirmation, setConfirmation] = useState('')
+
     const { product, loading, error } = useSelector(state => state.singleProduct)
+    const { newProductAdded } = useSelector(state => state.cart)
 
     const dispatch = useDispatch()
+
     useEffect(() => {
         dispatch(getSingleProduct(match.params.id))
-    }, [dispatch, match.params.id])
+    }, [])
+
+    useEffect(() => {
+        if (newProductAdded){
+            setConfirmation("Product has been added to the Shopping Cart")
+        }
+        return (() => {
+            dispatch(hideCartConfirmation())
+        })
+    }, [newProductAdded])
 
     return (
         <>  
-            {loading ? <h3>Loading ...</h3> : error ? <h3>{error}</h3> : ''}
+            {loading ? <h3>Loading ...</h3> : error ? <AlertMsg msg={error} variant="danger"/> : ''}
             { product.BrandName !== undefined && <Breadcrumbs product={product} />}
+
+            {confirmation !== '' ? <AlertMsg msg={confirmation} variant="success" /> : ''}
             <Row>
                 <Col sm={12}><h3>{product.BrandName} {product.ProductName}</h3></Col>
                 <Col md={6}>
