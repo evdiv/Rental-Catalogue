@@ -106,8 +106,8 @@ const CheckoutView = (props) => {
                                 onChange={(e) => setProvincesId(e.target.value)}>
                                 <option value='0'>Choose your Province ...</option>
                                {provinces.map( province => {
-                                   return (<option key={province.ProvincesId} value={province.ProvincesId}>
-                                            {province.ProvinceName}</option>)
+                                   return (<option key={province.provincesId} value={province.provincesId}>
+                                            {province.provinceName}</option>)
                                })} 
                            </Form.Select>
                         </Form.Group> 
