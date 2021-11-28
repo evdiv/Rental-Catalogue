@@ -5,6 +5,7 @@ const Product = require('./models/productModel')
 const Brand = require('./models/brandModel')
 const User = require('./models/userModel')
 const Province = require('./models/provinceModel')
+const Order = require('./models/orderModel')
 
 const restrict = require('./middleware/authMiddleware')
 
@@ -16,7 +17,7 @@ app.get('/', (req, res) => {
     res.send('...')
 })
 
-app.get('/api/v1/products', async (req, res) => {
+app.get(`${process.env.API_URI}/products`, async (req, res) => {
     let products = []
     switch (req.query.type) {
         case 'featured':
@@ -32,28 +33,28 @@ app.get('/api/v1/products', async (req, res) => {
     res.json(products)
 })
 
-app.get('/api/v1/products/brands/:id', async (req, res) => {
+app.get(`${process.env.API_URI}/products/brands/:id`, async (req, res) => {
     const products = await Product.getByBrandID(req.params.id)
     res.json(products)
 })
 
-app.get('/api/v1/products/:id', async (req, res) => {
+app.get(`${process.env.API_URI}/products/:id`, async (req, res) => {
     const product = await Product.getByID(req.params.id)
     res.json(product)
 })
 
-app.get('/api/v1/brands', async (req, res) => {
+app.get(`${process.env.API_URI}/brands`, async (req, res) => {
     const brands = await Brand.getAll()
     res.json(brands)
 })
 
-app.get('/api/v1/provinces', async (req, res) => {
+app.get(`${process.env.API_URI}/provinces`, async (req, res) => {
     const provinces = await Province.getAll()
     res.json(provinces)
 })
 
 // Get User
-app.get('/api/v1/users', restrict, async (req, res) => {
+app.get(`${process.env.API_URI}/users`, restrict, async (req, res) => {
     try {
         const {password, ...user} = await User.getByID(req.body)
         res.json(user)
@@ -63,7 +64,7 @@ app.get('/api/v1/users', restrict, async (req, res) => {
 })
 
 //Update User
-app.put('/api/v1/users', restrict, async (req, res) => {
+app.put(`${process.env.API_URI}/users`, restrict, async (req, res) => {
     try {
         const user = await User.update(req.body)
         res.json(user)
@@ -73,7 +74,7 @@ app.put('/api/v1/users', restrict, async (req, res) => {
 })
 
 //Create a new User
-app.post('/api/v1/users', async (req, res) => { 
+app.post(`${process.env.API_URI}/users`, async (req, res) => {
     try{
         const user = await User.getByEmail(req.body)
         if (user) {
@@ -94,12 +95,43 @@ app.post('/api/v1/users', async (req, res) => {
 })
 
 //LogIn a User
-app.post('/api/v1/users/login', async (req, res) => {
+app.post(`${process.env.API_URI}/users/login`, async (req, res) => {
     try {
         const { user, token } = await User.login(req.body)
         res.json({ user, token })
     } catch (err) {
         res.status(401).send({ error: err.message })
+    }
+})
+
+// Get Order
+app.get(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
+    try {
+        const { order } = await Order.getByID(req.params.id)
+        res.json(order)
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+// Create a new Order
+app.post(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
+    try {
+        const { ordersID } = await Order.store(req.body)
+        const { order } = await Order.getByID({ ordersID })
+        res.json(order)
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+//Update Order
+app.put(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
+    try {
+        const { order } = await Order.update(req.body)
+        res.json(order)
+    } catch (err) {
+        res.status(400).send({ error: err.message })
     }
 })
 

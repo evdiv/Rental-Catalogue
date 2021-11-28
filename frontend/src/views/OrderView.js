@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Table, Form, Alert, Row, Col, Button} from 'react-bootstrap'
 import { getAccount } from '../actions/accountActions'
-import { getOrder, completeOrder } from '../actions/orderActions'
+import { stageOrder, completeOrder, setShippingInsurance } from '../actions/orderActions'
 import RentalTerm from '../components/RentalTerm'
 
 const OrderView = (props) => {
@@ -16,7 +16,7 @@ const OrderView = (props) => {
 
     useEffect(() => {
         dispatch(getAccount())
-        dispatch(getOrder())
+        dispatch(stageOrder())
     }, [])
 
     useEffect(() => {
@@ -25,12 +25,12 @@ const OrderView = (props) => {
         }
     }, [details.email])
 
-    const createOrderHandler = () => {
+    const submitOrderHandler = () => {
         dispatch(completeOrder())
     }
 
-    const handleShippingInsuranceEnabled = () => {
-        dispatch(toggleShippingInsurance())
+    const handleShippingInsurance = (shippingInsurance) => {
+        dispatch(setShippingInsurance({ shippingInsurance }))
     }
 
     const paymentMethodHandler = (paymentMethod) => {
@@ -128,8 +128,8 @@ const OrderView = (props) => {
                         <Col md={2}>${orderDetails.shippinglPrice}</Col>
                         <Col className="text-end" md={10}>
                             <Form.Check 
-                                checked={orderDetails.shippingInsuranceEnabled}
-                                onChange={() => handleShippingInsuranceEnabled()}
+                                   checked={orderDetails.shippingInsurance}
+                                   onChange={(e) => handleShippingInsurance(e.target.value)}
                                 type="checkbox" 
                                 style={{float: "right"}} 
                                 label="YES, I would like Shipping Insurance - 100% Coverage for Damage or Loss" />
@@ -154,7 +154,7 @@ const OrderView = (props) => {
             
             <Col className="text-end">
                 <Button
-                    onClick={e => createOrderHandler(e)}
+                    onClick={() => submitOrderHandler()}
                     variant="success"
                     size="lg"
                     type="submit">
