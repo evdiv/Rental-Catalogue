@@ -115,17 +115,22 @@ const OrderView = (props) => {
                 <Alert variant="light">
                     <Row>
                         <Col className="text-end" md={10}>Sub Total:</Col>
-                        <Col md={2}>${orderDetails.subTotalPrice}</Col>
-                        <Col className="text-end" md={10}>Taxes:</Col>
-                        <Col md={2}></Col>
-                           {orderDetails.taxes.forEach(el => {
-                               <>
-                               <Col className="text-end" md={10}>{el.taxName}</Col>
-                               <Col md={2}>${el.taxPrice}</Col>
-                               </>
-                           })}
+                           <Col md={2}>{orderDetails.subTotalPrice ? '$'+ orderDetails.subTotalPrice : 'free'}</Col>
+                           
+                        {orderDetails.taxes && 
+                            <>
+                                <Col className="text-end" md={10}>Taxes:</Col>
+                                <Col md={2}></Col>
+                                {orderDetails.taxes.forEach(el => {
+                                    <>
+                                    <Col className="text-end" md={10}>{el.taxName}</Col>
+                                    <Col md={2}>${el.taxPrice}</Col>
+                                    </>
+                                })}
+                            </>
+                        }
                         <Col className="text-end" md={10}>Shipping:</Col>
-                        <Col md={2}>${orderDetails.shippinglPrice}</Col>
+                           <Col md={2}>{orderDetails.shippinglPrice ? '$' + orderDetails.shippinglPrice : 'free'}</Col>
                         <Col className="text-end" md={10}>
                             <Form.Check 
                                    checked={orderDetails.shippingInsurance}
@@ -134,9 +139,9 @@ const OrderView = (props) => {
                                 style={{float: "right"}} 
                                 label="YES, I would like Shipping Insurance - 100% Coverage for Damage or Loss" />
                         </Col>
-                        <Col md={2}>${orderDetails.shippinglInsurance}</Col>
+                           <Col md={2}>{orderDetails.shippinglInsurance ? '$' + orderDetails.shippinglInsurance : 'No insurance'}</Col>
                         <Col className="text-end" md={10}>Total:</Col>
-                        <Col md={2}>${orderDetails.totalPrice}</Col>
+                           <Col md={2}>{orderDetails.totalPrice ? '$' + orderDetails.totalPrice : 'free'}</Col>
                     </Row>
                 </Alert>
             </Col>

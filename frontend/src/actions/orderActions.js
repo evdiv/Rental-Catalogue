@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const stageOrder = ({ shippingInsurance }) => async(dispatch, getState) => {
+export const stageOrder = () => async(dispatch, getState) => {
     try {
         dispatch({ type: "STAGE_ORDER_REQUEST"})
 
@@ -11,7 +11,7 @@ export const stageOrder = ({ shippingInsurance }) => async(dispatch, getState) =
             }
         }
         const cartProducts = getState().cart.cartProducts
-        const { data } = await axios.post('/api/v1/orders', { cartProducts, shippingInsurance }, config)
+        const { data } = await axios.post('/api/v1/orders', { cartProducts }, config)
 
         dispatch({ type: "STAGE_ORDER_SUCCESS", payload: data})
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))
@@ -21,11 +21,12 @@ export const stageOrder = ({ shippingInsurance }) => async(dispatch, getState) =
     }
 }
 
-export const completeOrder = ({data, orderId}) => async(dispatch, getState) => {
+export const completeOrder = (transaction) => async(dispatch, getState) => {
     try {
         dispatch({ type: "COMPLETE_ORDER_REQUEST" })
 
-        const { data } = await axios.put(`/api/v1/orders/${orderId}`, data)
+        const { orderId } = getState().order.orderDetails
+        const { data } = await axios.put(`/api/v1/orders/${orderId}`, transaction)
 
         dispatch({ type: "COMPLETE_ORDER_SUCCESS", payload: data })
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))
@@ -35,7 +36,7 @@ export const completeOrder = ({data, orderId}) => async(dispatch, getState) => {
     }
 }
 
-export const setShippingInsurance = ({ data, orderId }) => async(dispatch, getState) => {
+export const setShippingInsurance = (insurance) => async(dispatch, getState) => {
     try {
         dispatch({ type: "SET_INSURANCE_REQUEST" })
 
@@ -45,8 +46,8 @@ export const setShippingInsurance = ({ data, orderId }) => async(dispatch, getSt
                 Authorization: `Bearer ${getState().account.token}`
             }
         }
-
-        const { data } = await axios.put(`/api/v1/orders/${orderId}`, data, config)
+        const { orderId } = getState().order.orderDetails
+        const { data } = await axios.put(`/api/v1/orders/${orderId}`, { insurance }, config)
 
         dispatch({ type: "SET_INSURANCE_SUCCESS", payload: data })
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))

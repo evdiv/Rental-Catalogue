@@ -6,6 +6,7 @@ const Brand = require('./models/brandModel')
 const User = require('./models/userModel')
 const Province = require('./models/provinceModel')
 const Order = require('./models/orderModel')
+const ShoppingCart = require('./models/shoppingCartModel')
 
 const restrict = require('./middleware/authMiddleware')
 
@@ -117,6 +118,8 @@ app.get(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
 // Create a new Order
 app.post(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
     try {
+        await ShoppingCart.remove(req.body)
+        await ShoppingCart.store(req.body)
         const { ordersID } = await Order.store(req.body)
         const { order } = await Order.getByID({ ordersID })
         res.json(order)
