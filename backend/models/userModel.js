@@ -54,7 +54,7 @@ const update = async (reqBody) => {
                         homeCity = ?, 
                         postalCode = ?, 
                         provincesID = ?
-                    WHERE AccountsID = ${user.accountsID}`;
+                    WHERE accountsID = ${user.accountsID}`;
 
     const params = [
         updatedUser.firstName,

@@ -7,7 +7,7 @@ const store = async(reqBody) => {
         throw Error(errors.join(" "))
     }
 
-    reqBody.cartProducts.forEach(el => {
+    reqBody.cartProducts.forEach(async(el) => {
         const sql = `INSERT INTO shoppingcart (productsID, rentalRate, accountsID, qty, days)
                     VALUES(?, ?, ?, ?, ?)`;
 

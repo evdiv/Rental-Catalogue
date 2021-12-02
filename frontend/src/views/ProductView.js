@@ -6,6 +6,8 @@ import { hideCartConfirmation } from '../actions/cartActions'
 import Breadcrumbs from '../components/Breadcrumbs'
 import AddToCart from '../components/AddToCart'
 import { AlertMsg } from '../components/AlertMsg'
+import dotenv from 'dotenv'
+
 
 const ProductView = ({match}) => {
 
@@ -17,6 +19,7 @@ const ProductView = ({match}) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
+        dotenv.config()
         dispatch(getSingleProduct(match.params.id))
     }, [])
 
@@ -32,24 +35,24 @@ const ProductView = ({match}) => {
     return (
         <>  
             {loading ? <h3>Loading ...</h3> : error ? <AlertMsg msg={error} variant="danger"/> : ''}
-            { product.BrandName !== undefined && <Breadcrumbs product={product} />}
+            { product.brandName !== undefined && <Breadcrumbs product={product} />}
 
             {confirmation !== '' ? <AlertMsg msg={confirmation} variant="success" /> : ''}
             <Row>
-                <Col sm={12}><h3>{product.BrandName} {product.ProductName}</h3></Col>
+                <Col sm={12}><h3>{product.brandName} {product.productName}</h3></Col>
                 <Col md={6}>
-                    <Image src={`/images/products/${product.Image1}`} rounded fluid/>
+                    <Image src={`/images/products/${product.image1}`} rounded fluid/>
                 </Col>
                 <Col md={6}>
                     <Row>
-                        <Col md={3}>SKU: {product.ProductSku}</Col>
-                        <Col md={3}>Model: {product.ProductModel}</Col>
+                        <Col md={3}>SKU: {product.productSku}</Col>
+                        <Col md={3}>Model: {product.productModel}</Col>
                     </Row>
 
                     <h4 style={{marginTop: 30, marginBottom: 20}}>Your Price: </h4>
-                    <h6>1 Day: ${product.DailyRentalRate} CDN</h6>
-                    <h6>1 Week: ${product.WeeklyRentalRate} CDN</h6>
-                    <h6>1 Month: ${product.MonthlyRentalRate} CDN</h6>
+                    <h6>1 Day: ${product.rentalRate} CDN</h6>
+                    <h6>1 Week: ${product.rentalRate * process.env.DISCOUNT_WEEK} CDN</h6>
+                    <h6>1 Month: ${product.rentalRate * process.env.DISCOUNT_MONTH} CDN</h6>
 
                     <p style={{ marginTop: 20, marginBottom: 30}}>{product.description}</p>
 

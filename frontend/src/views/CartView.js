@@ -8,7 +8,7 @@ import RentalTerm from '../components/RentalTerm'
 const CartView = () => {
     const {cartProducts} = useSelector(state => state.cart)
     const totalQty = cartProducts.reduce((total, p) => total + p.qty, 0)
-    const totalPrice = cartProducts.reduce((price, p) => price + (p.product.DailyRentalRate * p.qty), 0)
+    const totalPrice = cartProducts.reduce((price, p) => price + (p.product.rentalRate * p.qty), 0)
 
     const dispatch = useDispatch()
 
@@ -35,17 +35,17 @@ const CartView = () => {
                             </thead>
                             <tbody>
                                 {cartProducts.map(i => (
-                                    <tr key={`${i.product.ProductsID}-${i.days}-${i.qty}`}>
-                                        <td>{i.product.ProductSku}</td>
-                                        <td><Link to={`/products/${i.product.ProductsID}`}>
-                                                {i.product.BrandName} / {i.product.ProductName}
+                                    <tr key={`${i.product.productsID}-${i.days}-${i.qty}`}>
+                                        <td>{i.product.productSku}</td>
+                                        <td><Link to={`/products/${i.product.productsID}`}>
+                                                {i.product.brandName} / {i.product.productName}
                                             </Link>
                                         </td>
                                         <td>{i.qty}</td>
                                         <td><RentalTerm term={i.days} /></td>
                                         <td><Badge pill bg="danger" style={{cursor: 'pointer'}}
                                             onClick={() => {
-                                                removeFromCartHandler({ id: i.product.ProductsID, days: i.days, qty: i.qty})
+                                                removeFromCartHandler({ id: i.product.productsID, days: i.days, qty: i.qty})
                                             }}>
                                                 <i className="fa fa-times" aria-hidden="true"></i>
                                             </Badge>
@@ -73,4 +73,3 @@ const CartView = () => {
 }
 
 export default CartView
-

@@ -20,7 +20,7 @@ export const getOnSaleProducts = () => async (dispatch) => {
         dispatch({ type: 'ONSALE_PRODUCTS_SUCCESS', payload: data })
 
     } catch (error) {
-        dispatch({ type: 'ONSALE_PRODUCTS_FAIL', payload: error.message })
+        dispatch({ type: 'ONSALE_PRODUCTS_FAIL', payload: error.message }) 
     }
 }
 

@@ -18,7 +18,7 @@ const OnSaleProductsView = () => {
             {loading ? <h5>Loading ...</h5> : error ? <h5>{error}</h5> : (
                 <Row>
                     {products.map(p => (
-                        <Col key={p.ProductsID} sm={12} md={3} lg={2} >
+                        <Col key={p.productsID} sm={12} md={3} lg={2} >
                             <ProductPreView product={p} />
                         </Col>
                     ))}

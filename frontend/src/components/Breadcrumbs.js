@@ -9,11 +9,11 @@ const Breadcrumbs = ({product}) => {
                 <Breadcrumb.Item>Home</Breadcrumb.Item>
             </LinkContainer>
             
-            <LinkContainer to={`/brands/${product.BrandID}`}>
-                <Breadcrumb.Item>{product.BrandName}</Breadcrumb.Item>
+            <LinkContainer to={`/brands/${product.brandID}`}>
+                <Breadcrumb.Item>{product.brandName}</Breadcrumb.Item>
             </LinkContainer>
             
-            <Breadcrumb.Item active>{product.ProductName}</Breadcrumb.Item>
+            <Breadcrumb.Item active>{product.productName}</Breadcrumb.Item>
         </Breadcrumb>
     )
 }
