@@ -10,8 +10,8 @@ export const stageOrder = () => async(dispatch, getState) => {
                 Authorization: `Bearer ${getState().account.token}`
             }
         }
-        const cartProducts = getState().cart.cartProducts
-        const { data } = await axios.post('/api/v1/orders', { cartProducts }, config)
+        const {cartProducts} = getState().cart
+        const { data } = await axios.post('/api/v1/orders', {cartProducts}, config)
 
         dispatch({ type: "STAGE_ORDER_SUCCESS", payload: data})
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))

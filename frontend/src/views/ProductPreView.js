@@ -1,9 +1,6 @@
 import React from 'react'
 import Card from 'react-bootstrap/Card'
 import {Link} from 'react-router-dom'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 const ProductPreView = ({product}) => {
     return (
@@ -23,9 +20,7 @@ const ProductPreView = ({product}) => {
                     </small>
                 </Card.Text>
 
-                <Card.Text as='h6'>1 Day ${product.rentalRate}</Card.Text>
-                <Card.Text as='h6'>1 Week ${product.rentalRate * process.env.DISCOUNT_WEEK}</Card.Text>
-                <Card.Text as='h6'>1 Month ${product.rentalRate * process.env.DISCOUNT_MONTH}</Card.Text>
+                <Card.Text as='h6'>Rental rate: ${product.rentalRate}/day</Card.Text>
 
             </Card.Body>
         </Card>

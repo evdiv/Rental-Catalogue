@@ -7,13 +7,13 @@ const store = async(reqBody) => {
         throw Error(errors.join(" "))
     }
 
-    reqBody.cartProducts.forEach(async(el) => {
+    for (const el of reqBody.cartProducts){
         const sql = `INSERT INTO shoppingcart (productsID, rentalRate, accountsID, qty, days)
                     VALUES(?, ?, ?, ?, ?)`;
 
         const params = [
             el.product.productsID,
-            el.product.dailyRentalRate,
+            el.product.rentalRate,
             reqBody.accountsID,
             el.qty,
             el.days
@@ -23,7 +23,8 @@ const store = async(reqBody) => {
         if (!result.insertId) {
             throw Error("System Error")
         }
-    })
+    }
+
     return reqBody.cartProducts.length
 }
 
@@ -61,13 +62,28 @@ const remove = async (reqBody) => {
 }
 
 
-const validate = (reqBody, action) => {
+const validate = ({ accountsID, cartProducts}, action) => {
     const errors = []
-    if (!reqBody.accountsID && ['store', 'remove', 'accountsID'].includes(action)) {
+    if (!accountsID && ['store', 'remove', 'accountsID'].includes(action)) {
         errors.push("Account ID is not provided")
     }
-    if ((!reqBody.cartProducts || !reqBody.cartProducts.length) && ['store'].includes(action)) {
+
+    if ((!Array.isArray(cartProducts) || !cartProducts.length) && ['store'].includes(action)) {
         errors.push("Shopping Card doesn't contain products")
+    }
+
+    if (['store'].includes(action)){
+        cartProducts.forEach(el => {
+            if (parseFloat(el.product.rentalRate) < 1) {
+                errors.push(`Product ID ${el.product.productsID} doesn't have rental rate`)
+            }
+            if (parseInt(el.days) < 1){
+                errors.push(`Rental term cannot be empty for Product ID ${el.product.productsID}`)
+            }
+            if (parseInt(el.qty) < 1){
+                errors.push(`Qty cannot be empty for Product ID ${el.product.productsID}`)
+            }
+        })
     }
 
     return errors

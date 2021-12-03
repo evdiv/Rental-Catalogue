@@ -19,7 +19,7 @@ const OrderView = (props) => {
         dispatch(stageOrder())
     }, [])
 
-    useEffect(() => {
+    useEffect(() => { 
         if (details.email === undefined) {
             props.history.push('/login')
         }

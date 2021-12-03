@@ -49,11 +49,7 @@ const ProductView = ({match}) => {
                         <Col md={3}>Model: {product.productModel}</Col>
                     </Row>
 
-                    <h4 style={{marginTop: 30, marginBottom: 20}}>Your Price: </h4>
-                    <h6>1 Day: ${product.rentalRate} CDN</h6>
-                    <h6>1 Week: ${product.rentalRate * process.env.DISCOUNT_WEEK} CDN</h6>
-                    <h6>1 Month: ${product.rentalRate * process.env.DISCOUNT_MONTH} CDN</h6>
-
+                    <h4 style={{ marginTop: 30, marginBottom: 20 }}>Rental rate: ${product.rentalRate}/day CDN </h4>
                     <p style={{ marginTop: 20, marginBottom: 30}}>{product.description}</p>
 
                     <AddToCart product={product}/>

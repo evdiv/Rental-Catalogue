@@ -21,7 +21,7 @@ export const hideCartConfirmation = () => (dispatch) => {
 export const removeFromCart = ({ id, qty, days }) => (dispatch, getState) => {
 
     const products = getState().cart.cartProducts.filter(p => {
-        return (p.product.ProductsID !== id || p.qty !== qty || p.days !== days) 
+        return (p.product.productsID !== id || p.qty !== qty || p.days !== days) 
     })
 
     dispatch({
