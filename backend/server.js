@@ -121,13 +121,12 @@ app.post(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
         await ShoppingCart.remove(req.body)
         await ShoppingCart.store(req.body)
 
-        res.json(['aaaa', 'dddd'])
+        const orderID = await Order.store(req.body)
+        const order = await Order.getByID({ orderID })
 
-        //const { ordersID } = await Order.store(req.body)
-        //console.log(ordersID)
+        console.log(orderID)
 
-        // const { order } = await Order.getByID({ ordersID })
-        // res.json(order)
+        res.json(order)
     } catch (err) {
         res.status(401).send({ error: err.message })
     }

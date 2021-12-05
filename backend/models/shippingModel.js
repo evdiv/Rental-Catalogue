@@ -1,14 +1,19 @@
-const execute = require('../db')
+const ShoppingCart = require('./shoppingCartModel')
+require('dotenv').config()
+
 
 const getCost = ({ accountsID, cartProducts }) => {
-    return flatRate(cartProducts)
+    return getflatRate(cartProducts)
 }
 
-const flatRate = (products) => {
-    const totalPrice = products.reduce(total, el => {
-        return total + (el.product.rentalRate * el.days * el.qty)
-    }, 0)
-    return totalPrice
+const getShippingInsuranceCost = (products) => {
+    const totalPrice = ShoppingCart.getTotalProductsPrice(products)
+    return totalPrice * process.env.SHIPPING_INSURANCE_RATE
 }
 
-module.exports = { getCost }
+const getflatRate = (products) => {
+    const totalPrice = ShoppingCart.getTotalProductsPrice(products)
+    return totalPrice * process.env.SHIPPING_FLAT_RATE
+}
+
+module.exports = { getCost, getShippingInsuranceCost }

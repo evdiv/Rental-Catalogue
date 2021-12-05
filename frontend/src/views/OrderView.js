@@ -92,15 +92,15 @@ const OrderView = (props) => {
                                </tr>
                            </thead>
                            <tbody>
-                               {cartProducts.map(i => (
-                                   <tr key={`${i.product.productsID}-${i.days}-${i.qty}`}>
-                                       <td>{i.product.productSku}</td>
-                                       <td><Link to={`/products/${i.product.productsID}`}>
-                                           {i.product.brandName} / {i.product.productName}
+                               {cartProducts.map(p => (
+                                   <tr key={`${p.productsID}-${p.days}-${p.qty}`}>
+                                       <td>{p.productSku}</td>
+                                       <td><Link to={`/products/${p.productsID}`}>
+                                           {p.brandName} / {p.productName}
                                        </Link>
                                        </td>
-                                       <td>{i.qty}</td>
-                                       <td><RentalTerm term={i.days} /></td>
+                                       <td>{p.qty}</td>
+                                       <td><RentalTerm term={p.days} /></td>
                                    </tr>
                                ))}
                            </tbody>

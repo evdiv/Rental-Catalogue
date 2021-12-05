@@ -8,7 +8,7 @@ import RentalTerm from '../components/RentalTerm'
 const CartView = () => {
     const {cartProducts} = useSelector(state => state.cart)
     const totalQty = cartProducts.reduce((total, p) => total + p.qty, 0)
-    const totalPrice = cartProducts.reduce((price, p) => price + (p.product.rentalRate * p.qty), 0)
+    const totalPrice = cartProducts.reduce((price, p) => price + (p.rentalRate * p.qty), 0)
 
     const dispatch = useDispatch()
 
@@ -34,18 +34,18 @@ const CartView = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {cartProducts.map(i => (
-                                    <tr key={`${i.product.productsID}-${i.days}-${i.qty}`}>
-                                        <td>{i.product.productSku}</td>
-                                        <td><Link to={`/products/${i.product.productsID}`}>
-                                                {i.product.brandName} / {i.product.productName}
+                                {cartProducts.map(p => (
+                                    <tr key={`${p.productsID}-${p.days}-${p.qty}`}>
+                                        <td>{p.productSku}</td>
+                                        <td><Link to={`/products/${p.productsID}`}>
+                                                {p.brandName} / {p.productName}
                                             </Link>
                                         </td>
-                                        <td>{i.qty}</td>
-                                        <td><RentalTerm term={i.days} /></td>
+                                        <td>{p.qty}</td>
+                                        <td><RentalTerm term={p.days} /></td>
                                         <td><Badge pill bg="danger" style={{cursor: 'pointer'}}
                                             onClick={() => {
-                                                removeFromCartHandler({ id: i.product.productsID, days: i.days, qty: i.qty})
+                                                removeFromCartHandler({ id: p.productsID, days: p.days, qty: p.qty})
                                             }}>
                                                 <i className="fa fa-times" aria-hidden="true"></i>
                                             </Badge>

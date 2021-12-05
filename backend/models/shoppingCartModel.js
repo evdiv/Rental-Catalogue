@@ -7,16 +7,16 @@ const store = async(reqBody) => {
         throw Error(errors.join(" "))
     }
 
-    for (const el of reqBody.cartProducts){
+    for (const product of reqBody.cartProducts){
         const sql = `INSERT INTO shoppingcart (productsID, rentalRate, accountsID, qty, days)
                     VALUES(?, ?, ?, ?, ?)`;
 
         const params = [
-            el.product.productsID,
-            el.product.rentalRate,
-            reqBody.accountsID,
-            el.qty,
-            el.days
+            product.productsID,
+            product.rentalRate,
+            product.qty,
+            product.days,
+            reqBody.accountsID
         ]
 
         const result = await execute(sql, params)
@@ -24,7 +24,6 @@ const store = async(reqBody) => {
             throw Error("System Error")
         }
     }
-
     return reqBody.cartProducts.length
 }
 
@@ -61,6 +60,13 @@ const remove = async (reqBody) => {
     return result.affectedRows ? result.affectedRows : false;
 }
 
+const getTotalProductsPrice = (products) => {
+    const totalProductsPrice = products.reduce((total, p) => {
+        return total + (parseFloat(p.rentalRate) * parseInt(p.days) * parseInt(p.qty))
+    }, 0)
+
+    return totalProductsPrice
+}
 
 const validate = ({ accountsID, cartProducts}, action) => {
     const errors = []
@@ -73,20 +79,19 @@ const validate = ({ accountsID, cartProducts}, action) => {
     }
 
     if (['store'].includes(action)){
-        cartProducts.forEach(el => {
-            if (parseFloat(el.product.rentalRate) < 1) {
-                errors.push(`Product ID ${el.product.productsID} doesn't have rental rate`)
+        cartProducts.forEach(product => {
+            if (parseFloat(product.rentalRate) < 1) {
+                errors.push(`Product ID ${product.productsID} doesn't have rental rate`)
             }
-            if (parseInt(el.days) < 1){
-                errors.push(`Rental term cannot be empty for Product ID ${el.product.productsID}`)
+            if (parseInt(product.days) < 1){
+                errors.push(`Rental term cannot be empty for Product ID ${product.productsID}`)
             }
-            if (parseInt(el.qty) < 1){
-                errors.push(`Qty cannot be empty for Product ID ${el.product.productsID}`)
+            if (parseInt(product.qty) < 1){
+                errors.push(`Qty cannot be empty for Product ID ${product.productsID}`)
             }
         })
     }
-
     return errors
 }
 
-module.exports = { store, remove, getActiveByAcountID }
+module.exports = { store, remove, getActiveByAcountID, getTotalProductsPrice }

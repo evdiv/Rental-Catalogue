@@ -1,11 +1,11 @@
 export const cartReducer = (state = { cartProducts: [], newProductAdded: false}, action) => {
     switch (action.type) {
         case "CART_ADD_PRODUCT":
-            const {product, qty, days} = action.payload
+            const product = action.payload
             return {
                 ...state,
                 newProductAdded: true,
-                cartProducts: [...state.cartProducts, {product, qty, days}]
+                cartProducts: [...state.cartProducts, { ...product }]
             }
 
         case "CART_HIDE_CONFIRMATION":

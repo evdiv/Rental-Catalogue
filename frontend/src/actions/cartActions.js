@@ -3,7 +3,12 @@ export const addToCart = ({product, qty, days}) => (dispatch, getState) => {
     dispatch({
         type: "CART_ADD_PRODUCT",
         payload: {
-            product: product,
+            productsID: product.productsID,
+            brandID: product.brandID,
+            brandName: product.brandName,
+            productName: product.productName,
+            productSku: product.productSku,
+            rentalRate: product.rentalRate,
             qty: +qty,
             days: days
         }
@@ -20,8 +25,8 @@ export const hideCartConfirmation = () => (dispatch) => {
 
 export const removeFromCart = ({ id, qty, days }) => (dispatch, getState) => {
 
-    const products = getState().cart.cartProducts.filter(p => {
-        return (p.product.productsID !== id || p.qty !== qty || p.days !== days) 
+    const products = getState().cart.cartProducts.filter(product => {
+        return (product.productsID !== id || product.qty !== qty || product.days !== days)
     })
 
     dispatch({
