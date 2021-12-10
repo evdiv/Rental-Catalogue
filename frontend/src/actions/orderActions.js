@@ -13,6 +13,7 @@ export const stageOrder = () => async(dispatch, getState) => {
         const {cartProducts} = getState().cart
         const { data } = await axios.post('/api/v1/orders', {cartProducts}, config)
 
+
         dispatch({ type: "STAGE_ORDER_SUCCESS", payload: data})
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))
 
@@ -36,7 +37,7 @@ export const completeOrder = (transaction) => async(dispatch, getState) => {
     }
 }
 
-export const setShippingInsurance = (insurance) => async(dispatch, getState) => {
+export const updateShippingInsurance = (insurance) => async(dispatch, getState) => {
     try {
         dispatch({ type: "SET_INSURANCE_REQUEST" })
 
@@ -46,8 +47,8 @@ export const setShippingInsurance = (insurance) => async(dispatch, getState) => 
                 Authorization: `Bearer ${getState().account.token}`
             }
         }
-        const { orderId } = getState().order.orderDetails
-        const { data } = await axios.put(`/api/v1/orders/${orderId}`, { insurance }, config)
+        const { ordersID } = getState().order.orderDetails
+        const { data } = await axios.put(`/api/v1/orders/${ordersID}`, {action: 'updateInsurance', insurance }, config)
 
         dispatch({ type: "SET_INSURANCE_SUCCESS", payload: data })
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))

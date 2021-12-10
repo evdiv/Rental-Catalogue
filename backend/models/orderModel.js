@@ -29,7 +29,6 @@ const store = async (reqBody) => {
     const totalProductsPrice = ShoppingCart.getTotalProductsPrice(cartProducts)
 
     const totalCostBeforeTaxes = shippingCost + shippingInsuranceCost + totalProductsPrice
-
     const { taxes, totalTaxCost } = await getTaxes(accountsID, totalCostBeforeTaxes)
     const totalCost = totalCostBeforeTaxes + totalTaxCost
 
@@ -44,27 +43,47 @@ const store = async (reqBody) => {
 
     const params = [
         reqBody.accountsID,
-        shippingCost,
-        shippingInsuranceCost,
-        totalProductsPrice,
-        totalCost,
+        shippingCost.toFixed(2),
+        shippingInsuranceCost.toFixed(2),
+        totalProductsPrice.toFixed(2),
+        totalCost.toFixed(2),
         taxCode1,
-        taxValue1,
+        taxValue1.toFixed(2),
         taxCode2,
-        taxValue2
+        taxValue2.toFixed(2)
     ]
-
-    console.log(params)
-
     const result = await execute(sql, params)
-    if (!result.insertId) {
+    
+    if (result.affectedRows === 0) {
         throw Error("System Error")
     }
     return result.insertId
 }
 
-const update = async (reqBody) => {
+const update = async (id, reqBody) => {
+    if (reqBody.action === 'updateInsurance'){
+        return await updateInsurance(id, reqBody.insurance)
+    }
+}
 
+const updateInsurance = async (id, insurance)=> {
+    const errors = validate({ id }, 'insurance')
+    if (errors.length > 0) {
+        throw Error(errors.join(" "))
+    }
+
+    const sql = `UPDATE orders SET shippingInsurance = ? WHERE ordersID = ?`;
+
+    const params = [
+        insurance,
+        id
+    ]
+    const result = await execute(sql, params)
+
+    if (result.affectedRows === 0) {
+        throw Error("System Error")
+    }
+    return result.affectedRows
 }
 
 const getTaxes = async (accountsID, totalCost) => {
@@ -85,33 +104,37 @@ const getTaxes = async (accountsID, totalCost) => {
     let totalTaxCost = 0
 
     if(rows[0].PST > 0){
-        taxCost = parseFloat((rows[0].PST * totalCost * 0.01).toFixed(2))
+        taxCost = +(rows[0].PST * totalCost * 0.01)
         totalTaxCost += taxCost
         taxes.push({ code: 'PST', value: taxCost })
     }
     if(rows[0].GST > 0) {
-        taxCost = parseFloat((rows[0].GST * totalCost * 0.01).toFixed(2))
+        taxCost = +(rows[0].GST * totalCost * 0.01)
         totalTaxCost += taxCost
         taxes.push({ code: 'GST', value: taxCost })
     }
     if(rows[0].HST > 0) {
-        taxCost = parseFloat((rows[0].HST * totalCost * 0.01).toFixed(2))
+        taxCost = +(rows[0].HST * totalCost * 0.01)
         totalTaxCost += taxCost
         taxes.push({ code: 'HST', value: taxCost })
     }
     if (rows[0].QST > 0) {
-        taxCost = parseFloat((rows[0].QST * totalCost * 0.01).toFixed(2))
+        taxCost = +(rows[0].QST * totalCost * 0.01)
         totalTaxCost += taxCost
         taxes.push({ code: 'QST', value: taxCost })
     }
-    
+
     return {taxes, totalTaxCost}
 }
 
-const validate = ({ accountsID, totalCost, cartProducts }, action) => {
+const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
     const errors = []
     if (!accountsID && ['store', 'taxes', 'accountsID'].includes(action)) {
         errors.push("Account ID is not provided")
+    }
+
+    if (!id && ['insurance'].includes(action)) {
+        errors.push("Order Id is not defined")
     }
 
     if (1 > parseFloat(totalCost) && ['taxes'].includes(action)) {

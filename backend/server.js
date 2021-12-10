@@ -122,21 +122,24 @@ app.post(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
         await ShoppingCart.store(req.body)
 
         const orderID = await Order.store(req.body)
-        const order = await Order.getByID({ orderID })
-
-        console.log(orderID)
+        const order = await Order.getByID(orderID)
 
         res.json(order)
     } catch (err) {
-        res.status(401).send({ error: err.message })
+        res.status(400).send({ error: err.message })
     }
 })
 
 //Update Order
 app.put(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
     try {
-        const { order } = await Order.update(req.body)
+        const updated = await Order.update(req.params.id, req.body)
+        if(!updated){
+            res.status(400).send({ error: 'Order has not been updated' })
+        }
+        const order = await Order.getByID(req.params.id)
         res.json(order)
+
     } catch (err) {
         res.status(400).send({ error: err.message })
     }

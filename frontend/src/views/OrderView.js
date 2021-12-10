@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Table, Form, Alert, Row, Col, Button} from 'react-bootstrap'
 import { getAccount } from '../actions/accountActions'
-import { stageOrder, completeOrder, setShippingInsurance } from '../actions/orderActions'
+import { stageOrder, completeOrder, updateShippingInsurance } from '../actions/orderActions'
 import RentalTerm from '../components/RentalTerm'
 
 const OrderView = (props) => {
@@ -11,6 +11,9 @@ const OrderView = (props) => {
     const { details } = useSelector(state => state.account)
     const { cartProducts } = useSelector(state => state.cart)
     const { orderDetails } = useSelector(state => state.order)
+
+    const [shippingInsurance, setShippingInsurance] = useState(orderDetails.shippingInsurance)
+    const [paymentMethod, setPaymentMethod] = useState('cc')
 
     const dispatch = useDispatch()
 
@@ -29,12 +32,13 @@ const OrderView = (props) => {
         dispatch(completeOrder())
     }
 
-    const handleShippingInsurance = (shippingInsurance) => {
-        dispatch(setShippingInsurance({ shippingInsurance }))
+    const paymentMethodHandler = (paymentMethod) => {
+        setPaymentMethod(paymentMethod)
     }
 
-    const paymentMethodHandler = (paymentMethod) => {
-
+    const shippingInsuranceHandler = (shippingInsurance)=> {
+        setShippingInsurance(shippingInsurance)
+        dispatch(updateShippingInsurance(shippingInsurance))
     }
 
    return (
@@ -58,18 +62,21 @@ const OrderView = (props) => {
                 <Alert variant="light">
                     <Form>
                        <Form.Check
-                            onClick={() => paymentMethodHandler('cc')}
+                            onChange={() => paymentMethodHandler('cc')}
                             type="radio"
+                            checked={paymentMethod === 'cc'}
                             label="Visa/MasterCard/American Express"
                        />
                        <Form.Check
-                            onClick={() => paymentMethodHandler('paypal')}
+                            onChange={() => paymentMethodHandler('paypal')}
                             type="radio"
+                            checked={paymentMethod === 'paypal'}
                             label="PayPal"
                        />
                        <Form.Check
-                            onClick={() => paymentMethodHandler('etransfer')}
+                            onChange={() => paymentMethodHandler('etransfer')}
                             type="radio"
+                            checked={paymentMethod === 'etransfer'}
                             label="Email Money Transfer"
                        />
                     </Form>
@@ -115,33 +122,35 @@ const OrderView = (props) => {
                 <Alert variant="light">
                     <Row>
                         <Col className="text-end" md={10}>Sub Total:</Col>
-                           <Col md={2}>{orderDetails.subTotalPrice ? '$'+ orderDetails.subTotalPrice : 'free'}</Col>
-                           
-                        {orderDetails.taxes && 
+                        <Col md={2}>{orderDetails.orderSubTotal ? '$' + orderDetails.orderSubTotal : 'free'}</Col>
+
+                        {orderDetails.taxValue1 > 0 &&
                             <>
-                                <Col className="text-end" md={10}>Taxes:</Col>
-                                <Col md={2}></Col>
-                                {orderDetails.taxes.forEach(el => {
-                                    <>
-                                    <Col className="text-end" md={10}>{el.taxName}</Col>
-                                    <Col md={2}>${el.taxPrice}</Col>
-                                    </>
-                                })}
+                                <Col className="text-end" md={10}>Taxes {orderDetails.taxCode1}:</Col>
+                                <Col md={2}>${orderDetails.taxValue1}</Col>
                             </>
                         }
+
+                        {orderDetails.taxValue2 > 0 &&
+                            <>
+                                <Col className="text-end" md={10}>Taxes {orderDetails.taxCode2}:</Col>
+                                <Col md={2}>${orderDetails.taxValue2}</Col>
+                            </>
+                        }
+
                         <Col className="text-end" md={10}>Shipping:</Col>
-                           <Col md={2}>{orderDetails.shippinglPrice ? '$' + orderDetails.shippinglPrice : 'free'}</Col>
+                           <Col md={2}>{orderDetails.shipping ? '$' + orderDetails.shipping : 'free'}</Col>
                         <Col className="text-end" md={10}>
                             <Form.Check 
-                                   checked={orderDetails.shippingInsurance}
-                                   onChange={(e) => handleShippingInsurance(e.target.value)}
+                                   checked={shippingInsurance}
+                                   onChange={() => shippingInsuranceHandler(!shippingInsurance)}
                                 type="checkbox" 
                                 style={{float: "right"}} 
                                 label="YES, I would like Shipping Insurance - 100% Coverage for Damage or Loss" />
                         </Col>
-                           <Col md={2}>{orderDetails.shippinglInsurance ? '$' + orderDetails.shippinglInsurance : 'No insurance'}</Col>
+                           <Col md={2}>{orderDetails.shippingInsurance ? '$' + orderDetails.shippingInsurance : 'No insurance'}</Col>
                         <Col className="text-end" md={10}>Total:</Col>
-                           <Col md={2}>{orderDetails.totalPrice ? '$' + orderDetails.totalPrice : 'free'}</Col>
+                           <Col md={2}>{orderDetails.orderTotal ? '$' + orderDetails.orderTotal : 'free'}</Col>
                     </Row>
                 </Alert>
             </Col>
