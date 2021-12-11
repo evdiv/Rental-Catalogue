@@ -29,13 +29,8 @@ const store = async (reqBody) => {
     const totalProductsPrice = ShoppingCart.getTotalProductsPrice(cartProducts)
 
     const totalCostBeforeTaxes = shippingCost + shippingInsuranceCost + totalProductsPrice
-    const { taxes, totalTaxCost } = await getTaxes(accountsID, totalCostBeforeTaxes)
+    const { tax1, tax2, totalTaxCost } = await getTaxes(accountsID, totalCostBeforeTaxes)
     const totalCost = totalCostBeforeTaxes + totalTaxCost
-
-    const taxCode1 = (taxes[0] && taxes[0].code) ? taxes[0].code : ''
-    const taxValue1 = (taxes[0] && taxes[0].value) ? taxes[0].value : 0
-    const taxCode2 = (taxes[1] && taxes[1].code) ? taxes[1].code : ''
-    const taxValue2 = (taxes[1] && taxes[1].value) ? taxes[1].value : 0
 
     const sql = `INSERT INTO orders (accountsID, shipping, shippingInsurance, orderSubTotal, 
                         orderTotal, taxCode1, taxValue1, taxCode2, taxValue2)
@@ -47,10 +42,10 @@ const store = async (reqBody) => {
         shippingInsuranceCost.toFixed(2),
         totalProductsPrice.toFixed(2),
         totalCost.toFixed(2),
-        taxCode1,
-        taxValue1.toFixed(2),
-        taxCode2,
-        taxValue2.toFixed(2)
+        tax1.code,
+        tax1.value,
+        tax2.code,
+        tax2.value
     ]
     const result = await execute(sql, params)
     
@@ -60,24 +55,47 @@ const store = async (reqBody) => {
     return result.insertId
 }
 
-const update = async (id, reqBody) => {
-    if (reqBody.action === 'updateInsurance'){
-        return await updateInsurance(id, reqBody.insurance)
-    }
-}
 
-const updateInsurance = async (id, insurance)=> {
+const update = async (id, reqBody) => {
     const errors = validate({ id }, 'insurance')
     if (errors.length > 0) {
         throw Error(errors.join(" "))
     }
+  
+    const { accountsID, insurance, cartProducts } = reqBody
+    const shippingCost = Shipping.getCost({ accountsID, cartProducts })
+    const shippingInsuranceCost = insurance ? Shipping.getShippingInsuranceCost(cartProducts) : 0
+    const totalProductsPrice = ShoppingCart.getTotalProductsPrice(cartProducts)
 
-    const sql = `UPDATE orders SET shippingInsurance = ? WHERE ordersID = ?`;
+    const totalCostBeforeTaxes = shippingCost + shippingInsuranceCost + totalProductsPrice
+    const { tax1, tax2, totalTaxCost } = await getTaxes(accountsID, totalCostBeforeTaxes)
+    const totalCost = totalCostBeforeTaxes + totalTaxCost
+
+    const sql = `UPDATE orders 
+                    SET shipping = ?,
+                        shippingInsurance = ?,
+                        orderSubTotal = ?,
+                        orderTotal = ?,
+                        taxCode1 = ?,
+                        taxValue1 = ?,
+                        taxCode2 = ?,
+                        taxValue2 = ?
+                    WHERE ordersID = ?`;
 
     const params = [
-        insurance,
+        shippingCost.toFixed(2),
+        shippingInsuranceCost.toFixed(2),
+        totalProductsPrice.toFixed(2),
+        totalCost.toFixed(2),
+        tax1.code,
+        tax1.value,
+        tax2.code,
+        tax2.value,
         id
     ]
+
+    console.log(params)
+
     const result = await execute(sql, params)
 
     if (result.affectedRows === 0) {
@@ -85,6 +103,7 @@ const updateInsurance = async (id, insurance)=> {
     }
     return result.affectedRows
 }
+
 
 const getTaxes = async (accountsID, totalCost) => {
     const errors = validate({ accountsID, totalCost }, 'taxes')
@@ -124,8 +143,19 @@ const getTaxes = async (accountsID, totalCost) => {
         taxes.push({ code: 'QST', value: taxCost })
     }
 
-    return {taxes, totalTaxCost}
+    const tax1 = {
+        code : (taxes[0] && taxes[0].code) ? taxes[0].code : '',
+        value: (taxes[0] && taxes[0].value) ? taxes[0].value.toFixed(2) : 0
+    }
+
+    const tax2 = {
+        code: (taxes[1] && taxes[1].code) ? taxes[1].code : '',
+        value: (taxes[1] && taxes[1].value) ? taxes[1].value.toFixed(2) : 0
+    }
+
+    return {tax1, tax2, totalTaxCost}
 }
+
 
 const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
     const errors = []
@@ -147,7 +177,6 @@ const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
 
     return errors
 }
-
 
 
 module.exports = { getByID, store, update }

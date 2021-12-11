@@ -48,7 +48,8 @@ export const updateShippingInsurance = (insurance) => async(dispatch, getState) 
             }
         }
         const { ordersID } = getState().order.orderDetails
-        const { data } = await axios.put(`/api/v1/orders/${ordersID}`, {action: 'updateInsurance', insurance }, config)
+        const { cartProducts } = getState().cart
+        const { data } = await axios.put(`/api/v1/orders/${ordersID}`, { action: 'updateInsurance', insurance, cartProducts }, config)
 
         dispatch({ type: "SET_INSURANCE_SUCCESS", payload: data })
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))
