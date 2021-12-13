@@ -6,6 +6,7 @@ const Brand = require('./models/brandModel')
 const User = require('./models/userModel')
 const Province = require('./models/provinceModel')
 const Order = require('./models/orderModel')
+const Transaction = require('./models/transactionModel')
 const ShoppingCart = require('./models/shoppingCartModel')
 
 const restrict = require('./middleware/authMiddleware')
@@ -111,7 +112,7 @@ app.get(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
         const { order } = await Order.getByID(req.params.id)
         res.json(order)
     } catch (err) {
-        res.status(401).send({ error: err.message })
+        res.status(404).send({ error: err.message })
     }
 })
 
@@ -126,11 +127,36 @@ app.post(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
 
         res.json(order)
     } catch (err) {
-        res.status(400).send({ error: err.message })
+        res.status(404).send({ error: err.message })
     }
 })
 
-//Update Order
+//Update Order with Payment
+app.put(`${process.env.API_URI}/orders/:id/complete`, restrict, async (req, res) => {
+    try {
+        //
+        // In Production app here should be requests to the Payment Providers for getting transaction details
+        //
+        const transactionId = await Transaction.store(req.params.id, req.body)
+        if (!transactionId) {
+            res.status(400).send({ error: 'Transaction has not been created' })
+        }
+
+        const updated = await Order.complete(req.params.id, req.body)
+        if (!updated) {
+            res.status(400).send({ error: 'Order has not been updated' })
+        }
+ 
+        const order = await Order.getByID(req.params.id)
+        res.json(order)
+
+    } catch (err) {
+        res.status(404).send({ error: err.message })
+    }
+})
+
+
+//Update Order Details
 app.put(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
     try {
         const updated = await Order.update(req.params.id, req.body)
@@ -141,7 +167,7 @@ app.put(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
         res.json(order)
 
     } catch (err) {
-        res.status(400).send({ error: err.message })
+        res.status(404).send({ error: err.message })
     }
 })
 

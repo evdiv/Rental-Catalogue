@@ -29,7 +29,18 @@ const OrderView = (props) => {
     }, [details.email])
 
     const submitOrderHandler = () => {
-        dispatch(completeOrder())
+        //*********************************** */
+        //In the production app there should be callbacks from payment providers
+        //Paypal
+        //Stripe, Chase etc...
+        // 
+        // In the production app the transAmount will be received by server directly from the Payment providers
+        const transaction = {
+            status: 'success',
+            transAmount: paymentMethod !== 'etransfer' ? orderDetails.orderTotal : 0,
+            paymentMethod
+        }
+        dispatch(completeOrder(transaction))
     }
 
     const paymentMethodHandler = (paymentMethod) => {

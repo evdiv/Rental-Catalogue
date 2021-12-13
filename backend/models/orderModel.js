@@ -11,7 +11,7 @@ const getByID = async (id) => {
     const params = [id]
     const rows = await execute(sql, params)
     if (!rows[0]) {
-        throw Error("System Error")
+        throw Error("Order not found")
     }
     return rows[0]
 }
@@ -94,7 +94,30 @@ const update = async (id, reqBody) => {
         id
     ]
 
-    console.log(params)
+    const result = await execute(sql, params)
+
+    if (result.affectedRows === 0) {
+        throw Error("System Error")
+    }
+    return result.affectedRows
+}
+
+const complete = async (id, reqBody) => {
+    const errors = validate({ id }, 'complete')
+    if (errors.length > 0) {
+        throw Error(errors.join(" "))
+    }
+
+    const { transaction: { transAmount} } = reqBody
+
+    const sql = `UPDATE orders 
+                    SET transAmount = ?
+                    WHERE ordersID = ?`;
+
+    const params = [
+        transAmount,
+        id
+    ]
 
     const result = await execute(sql, params)
 
@@ -103,6 +126,8 @@ const update = async (id, reqBody) => {
     }
     return result.affectedRows
 }
+
+
 
 
 const getTaxes = async (accountsID, totalCost) => {
@@ -163,7 +188,7 @@ const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
         errors.push("Account ID is not provided")
     }
 
-    if (!id && ['insurance'].includes(action)) {
+    if (!id && ['insurance', 'complete'].includes(action)) {
         errors.push("Order Id is not defined")
     }
 
@@ -179,4 +204,4 @@ const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
 }
 
 
-module.exports = { getByID, store, update }
+module.exports = { getByID, store, update, complete }

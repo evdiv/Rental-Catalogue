@@ -23,6 +23,16 @@ export const orderReducer = (state = { orderDetails: {}}, action) => {
         case "SET_INSURANCE_FAIL":
             return { ...state, loading: false, error: action.payload }
 
+        
+        case "GET_ORDER_DETAILS_REQUEST":
+            return { ...state, loading: true }
+        case "GET_ORDER_DETAILS_SUCCESS":
+            return { orderDetails: action.payload, loading: false }
+        case "GET_ORDER_DETAILS_FAIL":
+            return { orderDetails: {}, loading: false, error: action.payload }
+
+        case "RESET_ORDER_DETAILS":
+            return { orderDetails: {}, loading: false }
 
         default:
             return state;

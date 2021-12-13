@@ -9,16 +9,14 @@ export const cartReducer = (state = { cartProducts: [], newProductAdded: false},
             }
 
         case "CART_HIDE_CONFIRMATION":
-            return {...state,
-                newProductAdded: false
-            }
+            return {...state, newProductAdded: false }
 
         case "CART_REMOVE_PRODUCT":
             const {products} = action.payload
-            return {
-                ...state,
-                cartProducts: products
-            }
+            return { ...state, cartProducts: products }
+
+        case "CART_RESET":
+            return { cartProducts: [], newProductAdded: false }
 
         default:
             return state
