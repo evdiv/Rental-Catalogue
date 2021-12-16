@@ -12,7 +12,7 @@ import RegisterAccountView from './views/RegisterAccountView';
 import MyAccountView from './views/MyAccountView';
 import CheckoutView from './views/CheckoutView';
 import OrderView from './views/OrderView';
-import ConfirmationView from './views/ConfirmationView';
+import OrderReceiptView from './views/OrderReceiptView';
 
 const App = () =>{
   return (
@@ -29,7 +29,7 @@ const App = () =>{
                 <Route path="/account" component={MyAccountView} />
                 <Route path="/checkout" component={CheckoutView} />
                 <Route path="/order" component={OrderView} />
-                <Route path="/confirmation" component={ConfirmationView} />
+                <Route path="/receipt/:id" component={OrderReceiptView} />
             </main>
         </Container>
         <Footer />

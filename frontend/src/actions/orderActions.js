@@ -33,10 +33,13 @@ export const completeOrder = (transaction) => async(dispatch, getState) => {
             }
         }
         const { ordersID } = getState().order.orderDetails
-        const { data } = await axios.put(`/api/v1/orders/${ordersID}/complete`, { transaction }, config)
+        await axios.put(`/api/v1/orders/${ordersID}/complete`, { transaction }, config)
 
-        dispatch({ type: "COMPLETE_ORDER_SUCCESS", payload: data })
-        localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))
+        dispatch({ type: "COMPLETE_ORDER_SUCCESS" })
+        dispatch({ type: "CART_RESET" })
+
+        localStorage.removeItem('order')
+        localStorage.removeItem('cartProducts')
 
     } catch (error) {
         dispatch({ type: "COMPLETE_ORDER_FAIL", payload: error.message })

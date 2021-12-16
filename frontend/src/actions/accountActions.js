@@ -74,8 +74,11 @@ export const updateAccount = (user) => async (dispatch, getState) => {
 
 
 export const LogoutAccount = () => (dispatch) => {
-    dispatch({type: "ACCOUNT_LOGOUT"})
+    dispatch({ type: "ACCOUNT_LOGOUT" })
+    dispatch({ type: "CART_RESET" })
 
-    localStorage.setItem('account', JSON.stringify({}))
-    localStorage.setItem('token', JSON.stringify(''))
+    localStorage.removeItem('cartProducts')
+    localStorage.removeItem('order')
+    localStorage.removeItem('account')
+    localStorage.removeItem('token')
 }

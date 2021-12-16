@@ -41,6 +41,7 @@ const OrderView = (props) => {
             paymentMethod
         }
         dispatch(completeOrder(transaction))
+        props.history.push(`/receipt/${orderDetails.ordersID}`)
     }
 
     const paymentMethodHandler = (paymentMethod) => {

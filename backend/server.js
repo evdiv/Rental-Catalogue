@@ -142,13 +142,12 @@ app.put(`${process.env.API_URI}/orders/:id/complete`, restrict, async (req, res)
             res.status(400).send({ error: 'Transaction has not been created' })
         }
 
-        const updated = await Order.complete(req.params.id, req.body)
-        if (!updated) {
+        const completed = await Order.complete(req.params.id, req.body)
+        if (!completed) {
             res.status(400).send({ error: 'Order has not been updated' })
         }
  
-        const order = await Order.getByID(req.params.id)
-        res.json(order)
+        res.json(completed)
 
     } catch (err) {
         res.status(404).send({ error: err.message })
