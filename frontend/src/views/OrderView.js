@@ -41,15 +41,15 @@ const OrderView = (props) => {
             paymentMethod
         }
         dispatch(completeOrder(transaction))
-        props.history.push(`/receipt/${orderDetails.ordersID}`)
+        props.history.push(`/order/${orderDetails.ordersID}/receipt`)
     }
 
     const paymentMethodHandler = (paymentMethod) => {
         setPaymentMethod(paymentMethod)
     }
 
-    const shippingInsuranceHandler = (shippingInsurance)=> {
-        setShippingInsurance(shippingInsurance)
+    const shippingInsuranceHandler = ()=> {
+        setShippingInsurance(!shippingInsurance)
         dispatch(updateShippingInsurance(shippingInsurance))
     }
 
@@ -154,8 +154,8 @@ const OrderView = (props) => {
                            <Col md={2}>{orderDetails.shipping ? '$' + orderDetails.shipping : 'free'}</Col>
                         <Col className="text-end" md={10}>
                             <Form.Check 
-                                   checked={shippingInsurance}
-                                   onChange={() => shippingInsuranceHandler(!shippingInsurance)}
+                                   checked={shippingInsurance > 0}
+                                   onChange={() => shippingInsuranceHandler()}
                                 type="checkbox" 
                                 style={{float: "right"}} 
                                 label="YES, I would like Shipping Insurance - 100% Coverage for Damage or Loss" />

@@ -7,6 +7,7 @@ import { cartReducer } from './reducers/cartReducers'
 import { accountReducer } from './reducers/accountReducers'
 import { provinceReducer } from './reducers/provinceReducers'
 import { orderReducer } from './reducers/orderReducers'
+import { orderReceiptReducer } from './reducers/orderReceiptReducers'
 
 const reducer = combineReducers({
     featuredProducts: featuredProductsReducer,
@@ -18,7 +19,8 @@ const reducer = combineReducers({
     cart: cartReducer,
     account: accountReducer,
     provinces: provinceReducer,
-    order: orderReducer
+    order: orderReducer,
+    receipt: orderReceiptReducer
 })
 
 const cartLocalStorage = localStorage.getItem('cartProducts')

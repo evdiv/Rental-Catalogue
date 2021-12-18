@@ -29,7 +29,7 @@ const App = () =>{
                 <Route path="/account" component={MyAccountView} />
                 <Route path="/checkout" component={CheckoutView} />
                 <Route path="/order" component={OrderView} />
-                <Route path="/receipt/:id" component={OrderReceiptView} />
+                <Route path="/order/:id/receipt" component={OrderReceiptView} />
             </main>
         </Container>
         <Footer />

@@ -162,7 +162,7 @@ const validate = (reqBody, action) => {
     if (!reqBody.postalCode && ['store'].includes(action)) {
         errors.push("Postal Code is required")
     }
-    if (!reqBody.provinceId && ['store'].includes(action)) {
+    if (!reqBody.provinceID && ['store'].includes(action)) {
         errors.push("Province is not provided")
     }
     if (!reqBody.email && ['store', 'login', 'email'].includes(action)) {

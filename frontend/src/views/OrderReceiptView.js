@@ -3,41 +3,40 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Table, Alert, Row, Col, Button} from 'react-bootstrap'
 import { getAccount } from '../actions/accountActions'
-import { getOrder } from '../actions/orderActions'
+import { getReceipt } from '../actions/orderReceiptActions'
 import RentalTerm from '../components/RentalTerm'
 
 const OrderReceiptView = (props) => {
 
-    const { details } = useSelector(state => state.account)
-    const { orderDetails } = useSelector(state => state.order)
+    const { orderReceipt } = useSelector(state => state.receipt)
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getAccount())
-        dispatch(getOrder(props.match.params.id))
+        dispatch(getReceipt(props.match.params.id))
     }, [])
 
     useEffect(() => { 
-        if (details.email === undefined) {
+        if (orderReceipt.email === undefined) {
             props.history.push('/login')
         }
-    }, [details.email])
+    }, [orderReceipt.email])
 
 
    return (
     <>
        <Row className="justify-content-md-center">
             <Col md={6}>
-                <h3>Order {orderDetails.ordersID} Receipt</h3>
+                <h3>Order {orderReceipt.ordersID} Receipt</h3>
 
                <Alert variant="light">
                    <b>Shipping Name:</b><br />
-                   {details.firstName} {details.lastName}<br /><br />
+                   {orderReceipt.firstName} {orderReceipt.lastName}<br /><br />
 
                    <b>Shipping Address:</b> <br/>
-                   {details.homeAddress}, {details.homeCity}<br/>
-                   {details.provinceName}, {details.postalCode}
+                   {orderReceipt.homeAddress}, {orderReceipt.homeCity}<br/>
+                   {orderReceipt.provinceName}, {orderReceipt.postalCode}
                </Alert>
             </Col>
             <Col md={6}>
@@ -46,27 +45,27 @@ const OrderReceiptView = (props) => {
                    <Alert variant="light">
                        <Row>
                            <Col className="text-end" md={10}>Sub Total:</Col>
-                           <Col md={2}>{orderDetails.orderSubTotal ? '$' + orderDetails.orderSubTotal : 'free'}</Col>
+                           <Col md={2}>{orderReceipt.orderSubTotal ? '$' + orderReceipt.orderSubTotal : 'free'}</Col>
 
-                           {orderDetails.taxValue1 > 0 &&
+                           {orderReceipt.taxValue1 > 0 &&
                                <>
-                                   <Col className="text-end" md={10}>Taxes {orderDetails.taxCode1}:</Col>
-                                   <Col md={2}>${orderDetails.taxValue1}</Col>
+                                   <Col className="text-end" md={10}>Taxes {orderReceipt.taxCode1}:</Col>
+                                   <Col md={2}>${orderReceipt.taxValue1}</Col>
                                </>
                            }
 
-                           {orderDetails.taxValue2 > 0 &&
+                           {orderReceipt.taxValue2 > 0 &&
                                <>
-                                   <Col className="text-end" md={10}>Taxes {orderDetails.taxCode2}:</Col>
-                                   <Col md={2}>${orderDetails.taxValue2}</Col>
+                                   <Col className="text-end" md={10}>Taxes {orderReceipt.taxCode2}:</Col>
+                                   <Col md={2}>${orderReceipt.taxValue2}</Col>
                                </>
                            }
 
                            <Col className="text-end" md={10}>Shipping:</Col>
-                           <Col md={2}>{orderDetails.shipping ? '$' + orderDetails.shipping : 'free'}</Col>
-                           <Col md={2}>{orderDetails.shippingInsurance ? '$' + orderDetails.shippingInsurance : 'No insurance'}</Col>
+                           <Col md={2}>{orderReceipt.shipping ? '$' + orderReceipt.shipping : 'free'}</Col>
+                           <Col md={2}>{orderReceipt.shippingInsurance ? '$' + orderReceipt.shippingInsurance : 'No insurance'}</Col>
                            <Col className="text-end" md={10}>Total:</Col>
-                           <Col md={2}>{orderDetails.orderTotal ? '$' + orderDetails.orderTotal : 'free'}</Col>
+                           <Col md={2}>{orderReceipt.orderTotal ? '$' + orderReceipt.orderTotal : 'free'}</Col>
                        </Row>
                    </Alert>
             </Col>

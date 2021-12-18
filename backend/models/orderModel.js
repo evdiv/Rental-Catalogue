@@ -7,11 +7,12 @@ const getByID = async (id) => {
     if (id === 0) {
         throw Error("Order Id cannot be empty")
     }
-    const sql = 'SELECT * FROM orders WHERE active = 1 AND ordersID = ?';
+    const sql = `SELECT * FROM orders WHERE active = 1 AND ordersID = ?`;
+
     const params = [id]
     const rows = await execute(sql, params)
     if (!rows[0]) {
-        throw Error("Order not found")
+        throw Error("Order is not found")
     }
     return rows[0]
 }
@@ -181,6 +182,40 @@ const getTaxes = async (accountsID, totalCost) => {
     return {tax1, tax2, totalTaxCost}
 }
 
+const getReceipt = async (orderID, { accountsID }) => {
+    orderID = orderID || 0
+    if (orderID === 0) {
+        throw Error("Order Id cannot be empty")
+    }
+    const params = [orderID, accountsID]
+
+    let sql = `SELECT o.*, a.firstName, a.LastName, a.email, a.homePhone, a.homeCity, a.postalCode, 
+                    a.homeAddress, a.unit, p.provinceName, t.status, t.paymentMethod
+                FROM orders AS o, accounts AS a, provinces AS p, transactions AS t
+                WHERE a.accountsID = o.accountsID
+                AND a.provincesID = p.provincesID
+                AND t.ordersID = o.ordersID
+                AND o.active = 1 
+                AND o.ordersID = ?
+                AND o.accountsID = ?`;
+
+    const orderDetails = await execute(sql, params)
+    if (!orderDetails[0]) {
+        throw Error("Order is not found")
+    }
+
+    sql = `SELECT sc.productsID, sc.rentalRate, sc.qty, sc.days, p.BrandName, p.productName, p.productSku, p.productModel
+                FROM shoppingcart AS sc, products AS p
+                WHERE sc.productsID = p.productsID
+                AND sc.orderID = ?`;
+
+    const orderProducts = await execute(sql, params)
+    if (!orderProducts.length) {
+        throw Error("Order products are not found")
+    }
+
+    return { orderDetails, orderProducts}
+}
 
 const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
     const errors = []
@@ -204,4 +239,4 @@ const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
 }
 
 
-module.exports = { getByID, store, update, complete }
+module.exports = { getByID, getReceipt, store, update, complete }

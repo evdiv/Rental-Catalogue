@@ -72,7 +72,7 @@ export const validateUser = (user, action) => {
     }
 
     //Province ID
-    if (!user.provincesId || user.provincesId === 0) {
+    if (!user.provincesID || user.provincesID === 0) {
         throw new Error("Province has to be selected")
     }
     return user

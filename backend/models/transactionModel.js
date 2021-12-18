@@ -3,7 +3,7 @@ const execute = require('../db')
 
 const getByID = async(id) => {
     id = id || 0
-    const sql = 'SELECT * FROM transactions WHERE transactionsId = ?';
+    const sql = 'SELECT * FROM transactions WHERE transactionsID = ?';
     const params = [id]
 
     return await execute(sql, params)

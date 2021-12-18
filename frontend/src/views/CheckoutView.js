@@ -17,7 +17,7 @@ const CheckoutView = (props) => {
     const [homeAddress, setHomeAddress] = useState(details.homeAddress)
     const [homeCity, setHomeCity] = useState(details.homeCity)
     const [postalCode, setPostalCode] = useState(details.postalCode)
-    const [provincesId, setProvincesId] = useState(details.provincesID)
+    const [provincesID, setProvincesId] = useState(details.provincesID)
 
     const dispatch = useDispatch()
 
@@ -40,7 +40,7 @@ const CheckoutView = (props) => {
                 homeAddress, 
                 homeCity, 
                 postalCode,
-                provincesId
+                provincesID
             }, 'update')
             dispatch(updateAccount(user))
             setError('')
@@ -102,11 +102,11 @@ const CheckoutView = (props) => {
                         <Form.Group as={Col}>
                            <Form.Label>Your Province</Form.Label>
                            <Form.Select 
-                                value={provincesId}
+                                value={provincesID}
                                 onChange={(e) => setProvincesId(e.target.value)}>
                                 <option value='0'>Choose your Province ...</option>
                                {provinces.map( province => {
-                                   return (<option key={province.provincesId} value={province.provincesId}>
+                                   return (<option key={province.provincesID} value={province.provincesID}>
                                             {province.provinceName}</option>)
                                })} 
                            </Form.Select>

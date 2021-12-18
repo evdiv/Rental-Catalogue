@@ -8,15 +8,16 @@ const store = async(reqBody) => {
     }
 
     for (const product of reqBody.cartProducts){
-        const sql = `INSERT INTO shoppingcart (productsID, rentalRate, accountsID, qty, days)
-                    VALUES(?, ?, ?, ?, ?)`;
+        const sql = `INSERT INTO shoppingcart (productsID, rentalRate, qty, days, accountsID, orderID)
+                    VALUES(?, ?, ?, ?, ?, ?)`;
 
         const params = [
             product.productsID,
             product.rentalRate,
             product.qty,
             product.days,
-            reqBody.accountsID
+            reqBody.accountsID,
+            reqBody.orderID
         ]
 
         const result = await execute(sql, params)
@@ -68,10 +69,14 @@ const getTotalProductsPrice = (products) => {
     return totalProductsPrice
 }
 
-const validate = ({ accountsID, cartProducts}, action) => {
+const validate = ({ accountsID, orderID, cartProducts}, action) => {
     const errors = []
     if (!accountsID && ['store', 'remove', 'accountsID'].includes(action)) {
         errors.push("Account ID is not provided")
+    }
+
+    if (!orderID && ['store'].includes(action)) {
+        errors.push("Order ID is not provided")
     }
 
     if ((!Array.isArray(cartProducts) || !cartProducts.length) && ['store'].includes(action)) {

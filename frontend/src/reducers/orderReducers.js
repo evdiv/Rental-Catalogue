@@ -33,6 +33,7 @@ export const orderReducer = (state = { orderDetails: {}, completed: false}, acti
 
         case "RESET_ORDER_DETAILS":
             return { orderDetails: {}, loading: false }
+            
 
         default:
             return state;

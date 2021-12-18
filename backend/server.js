@@ -116,13 +116,24 @@ app.get(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
     }
 })
 
+// Get Completed Order Receipt
+app.get(`${process.env.API_URI}/orders/:id/receipt`, restrict, async (req, res) => {
+    try {
+        const { receipt } = await Order.getReceipt(req.params.id, req.body)
+        res.json(receipt)
+    } catch (err) {
+        res.status(404).send({ error: err.message })
+    }
+})
+
 // Create a new Order
 app.post(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
     try {
-        await ShoppingCart.remove(req.body)
-        await ShoppingCart.store(req.body)
-
         const orderID = await Order.store(req.body)
+
+        console.log(orderID)
+        await ShoppingCart.store({ ...req.body, orderID})
+
         const order = await Order.getByID(orderID)
 
         res.json(order)
@@ -144,7 +155,7 @@ app.put(`${process.env.API_URI}/orders/:id/complete`, restrict, async (req, res)
 
         const completed = await Order.complete(req.params.id, req.body)
         if (!completed) {
-            res.status(400).send({ error: 'Order has not been updated' })
+            res.status(400).send({ error: 'The order was not completed' })
         }
  
         res.json(completed)
