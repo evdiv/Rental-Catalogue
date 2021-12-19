@@ -1,15 +1,18 @@
 import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Row, Col, Form, Button} from 'react-bootstrap'
+import { Row, Col, Form, Button, Table} from 'react-bootstrap'
 import { AlertMsg } from '../components/AlertMsg'
 import { getProvinces } from '../actions/provincesAction'
 import { validateUser } from '../utils/validateUser'
 import { getAccount, updateAccount } from '../actions/accountActions'
+import { getUserOrders } from '../actions/userOrdersActions'
+import DateConverter from '../components/DateConverter'
 
 const MyAccountView = (props) => {
 
     const { provinces } = useSelector(state => state)
     const { details } = useSelector(state => state.account)
+    const { loading, orders } = useSelector(state => state.userOrders)
 
     const [error, setError] = useState('')
     const [confirmation, setConfirmation] = useState('')
@@ -27,6 +30,7 @@ const MyAccountView = (props) => {
     useEffect(() => {
         dispatch(getProvinces())
         dispatch(getAccount())
+        dispatch(getUserOrders())
     }, [])
 
     useEffect(() => {
@@ -57,7 +61,7 @@ const MyAccountView = (props) => {
 
    return (
        <Row className="justify-content-md-center">
-            <Col md={8}>
+            <Col md={6}>
                <h3>My Account</h3>
                 {error !== ''  && <AlertMsg msg={error} variant="danger" />}
                 {confirmation !== '' && <AlertMsg msg={confirmation} variant="success" />}
@@ -147,6 +151,32 @@ const MyAccountView = (props) => {
                    </Button>
                </Form>
             </Col>
+           <Col md={6}>
+               <h3>My last 10 Orders</h3>
+               {loading ? <h3>Loading ...</h3> 
+                : !orders 
+                ? <p> Orders not found </p> 
+                : <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>Order Id</th>
+                            <th>Order Date</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {orders.map(o => (
+                           <tr key={o.ordersID}>
+                                <td>{o.ordersID}</td>
+                                <td><DateConverter orderDate={o.orderDate} /></td>
+                                <td>{o.orderTotal}</td>
+                            </tr>)
+                        )}
+                    </tbody>
+                </Table>
+                }
+           </Col>
+
        </Row>
    )
 }

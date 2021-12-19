@@ -14,12 +14,12 @@ const getByID = async (id) => {
 }
 
 const getFeatured = async() => {
-    const sql = 'SELECT * FROM products WHERE active = 1 AND rentalRate > 0 AND featured = 1 LIMIT 10';
+    const sql = 'SELECT * FROM products WHERE active = 1 AND rentalRate > 0 AND featured = 1 LIMIT 6';
     return await execute(sql)
 }
 
 const getOnSale = async () => {
-    const sql = 'SELECT * FROM products WHERE active = 1 AND rentalRate > 0 AND onSale = 1 LIMIT 10';
+    const sql = 'SELECT * FROM products WHERE active = 1 AND rentalRate > 0 AND onSale = 1 LIMIT 6';
     return await execute(sql)
 }
 

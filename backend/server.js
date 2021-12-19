@@ -106,10 +106,20 @@ app.post(`${process.env.API_URI}/users/login`, async (req, res) => {
     }
 })
 
+// Get Completed Orders
+app.get(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
+    try {
+        const orders = await Order.getCreatedByUser(req.body.accountsID)
+        res.json(orders)
+    } catch (err) {
+        res.status(404).send({ error: err.message })
+    }
+})
+
 // Get Order
 app.get(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
     try {
-        const { order } = await Order.getByID(req.params.id)
+        const order = await Order.getByID(req.params.id)
         res.json(order)
     } catch (err) {
         res.status(404).send({ error: err.message })
@@ -119,7 +129,7 @@ app.get(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
 // Get Completed Order Receipt
 app.get(`${process.env.API_URI}/orders/:id/receipt`, restrict, async (req, res) => {
     try {
-        const receipt= await Order.getReceipt(req.params.id, req.body)
+        const receipt = await Order.getReceipt(req.params.id, req.body)
         res.json(receipt)
     } catch (err) {
         res.status(404).send({ error: err.message })

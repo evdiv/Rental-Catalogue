@@ -2,6 +2,28 @@ const execute = require('../db')
 const ShoppingCart = require('./shoppingCartModel')
 const Shipping = require('./shippingModel')
 
+const getCreatedByUser = async(userId) => {
+    userId = userId || 0
+    if (userId === 0) {
+        throw Error("User Id cannot be empty")
+    }
+    //TODO: Add pagination
+    const sql = `SELECT ordersID, orderDate, transAmount, orderTotal 
+                    FROM orders 
+                    WHERE active = 1 
+                    AND transAmount > 0 
+                    AND accountsID = ?
+                    ORDER BY ordersID DESC
+                    LIMIT 10`;
+    
+    const params = [userId]
+    const rows = await execute(sql, params)
+    if (!rows[0]) {
+        throw Error("Orders are not found")
+    }
+    return rows
+}
+
 const getByID = async (id) => {
     id = id || 0
     if (id === 0) {
@@ -240,4 +262,4 @@ const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
 }
 
 
-module.exports = { getByID, getReceipt, store, update, complete }
+module.exports = { getByID, getReceipt, store, update, complete, getCreatedByUser }
