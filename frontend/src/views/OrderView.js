@@ -5,6 +5,8 @@ import { Table, Form, Alert, Row, Col, Button} from 'react-bootstrap'
 import { getAccount } from '../actions/accountActions'
 import { stageOrder, completeOrder, updateShippingInsurance } from '../actions/orderActions'
 import RentalTerm from '../components/RentalTerm'
+import PaymentType from '../components/PaymentType'
+
 
 const OrderView = (props) => {
 
@@ -28,6 +30,11 @@ const OrderView = (props) => {
         }
     }, [details.email])
 
+    useEffect(() => {
+        setShippingInsurance(orderDetails.shippingInsurance)
+    }, [orderDetails.shippingInsurance])
+
+
     const submitOrderHandler = () => {
         //*********************************** */
         //In the production app there should be callbacks from payment providers
@@ -35,13 +42,15 @@ const OrderView = (props) => {
         //Stripe, Chase etc...
         // 
         // In the production app the transAmount will be received by server directly from the Payment providers
-        const transaction = {
+        const ordersID = orderDetails.ordersID
+        const transaction = { 
             status: 'success',
             transAmount: paymentMethod !== 'etransfer' ? orderDetails.orderTotal : 0,
+            ordersID,
             paymentMethod
         }
         dispatch(completeOrder(transaction))
-        props.history.push(`/order/${orderDetails.ordersID}/receipt`)
+        props.history.push(`/receipt/${ordersID}`)
     }
 
     const paymentMethodHandler = (paymentMethod) => {
@@ -49,8 +58,9 @@ const OrderView = (props) => {
     }
 
     const shippingInsuranceHandler = ()=> {
-        setShippingInsurance(!shippingInsurance)
-        dispatch(updateShippingInsurance(shippingInsurance))
+        const toggleInsurance = +shippingInsurance > 0 ? false : true
+        setShippingInsurance(toggleInsurance)
+        dispatch(updateShippingInsurance(toggleInsurance))
     }
 
    return (
@@ -77,19 +87,19 @@ const OrderView = (props) => {
                             onChange={() => paymentMethodHandler('cc')}
                             type="radio"
                             checked={paymentMethod === 'cc'}
-                            label="Visa/MasterCard/American Express"
+                            label={<PaymentType payment={'cc'} />}
                        />
                        <Form.Check
                             onChange={() => paymentMethodHandler('paypal')}
                             type="radio"
                             checked={paymentMethod === 'paypal'}
-                            label="PayPal"
+                            label={<PaymentType payment={'paypal'} />}
                        />
                        <Form.Check
                             onChange={() => paymentMethodHandler('etransfer')}
                             type="radio"
                             checked={paymentMethod === 'etransfer'}
-                            label="Email Money Transfer"
+                            label={<PaymentType payment={'etransfer'} />}
                        />
                     </Form>
                 </Alert>
@@ -154,7 +164,7 @@ const OrderView = (props) => {
                            <Col md={2}>{orderDetails.shipping ? '$' + orderDetails.shipping : 'free'}</Col>
                         <Col className="text-end" md={10}>
                             <Form.Check 
-                                   checked={shippingInsurance > 0}
+                                   checked={+shippingInsurance > 0}
                                    onChange={() => shippingInsuranceHandler()}
                                 type="checkbox" 
                                 style={{float: "right"}} 

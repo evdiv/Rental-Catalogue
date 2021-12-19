@@ -4,12 +4,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Table, Alert, Row, Col, Button} from 'react-bootstrap'
 import { getAccount } from '../actions/accountActions'
 import { getReceipt } from '../actions/orderReceiptActions'
+import { AlertMsg } from '../components/AlertMsg'
+import DateConverter from '../components/DateConverter'
 import RentalTerm from '../components/RentalTerm'
+import PaymentType from '../components/PaymentType'
 
 const OrderReceiptView = (props) => {
 
-    const { orderReceipt } = useSelector(state => state.receipt)
-
+    const { details } = useSelector(state => state.account)
+    const { orderReceipt: { orderDetails, orderProducts }, loading, error } = useSelector(state => state.receipt)
+    
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -17,63 +21,74 @@ const OrderReceiptView = (props) => {
         dispatch(getReceipt(props.match.params.id))
     }, [])
 
-    useEffect(() => { 
-        if (orderReceipt.email === undefined) {
+    useEffect(() => {
+        if (details.email === undefined) {
             props.history.push('/login')
         }
-    }, [orderReceipt.email])
-
+    }, [details.email])
 
    return (
     <>
+    {loading ? <h3>Loading ...</h3> : error ? <AlertMsg msg={error} variant="danger" /> : ''}
+    {orderDetails &&
        <Row className="justify-content-md-center">
             <Col md={6}>
-                <h3>Order {orderReceipt.ordersID} Receipt</h3>
+                <h3>Order Receipt</h3>
 
-               <Alert variant="light">
-                   <b>Shipping Name:</b><br />
-                   {orderReceipt.firstName} {orderReceipt.lastName}<br /><br />
+                <Alert variant="light">
+                    <b>Order Date:</b> {orderDetails.orderDate && <DateConverter orderDate={orderDetails.orderDate} />} <br /><br />
 
-                   <b>Shipping Address:</b> <br/>
-                   {orderReceipt.homeAddress}, {orderReceipt.homeCity}<br/>
-                   {orderReceipt.provinceName}, {orderReceipt.postalCode}
-               </Alert>
+                    <b>Shipping Name:</b><br />
+                    {orderDetails.firstName} {orderDetails.lastName}<br /><br />
+
+                    <b>Shipping Address:</b> <br/>
+                    {orderDetails.homeAddress}, {orderDetails.homeCity}, {orderDetails.provinceName}, {orderDetails.postalCode}
+                </Alert>
             </Col>
+
             <Col md={6}>
                 <h3>Payment Details</h3>
 
-                   <Alert variant="light">
-                       <Row>
-                           <Col className="text-end" md={10}>Sub Total:</Col>
-                           <Col md={2}>{orderReceipt.orderSubTotal ? '$' + orderReceipt.orderSubTotal : 'free'}</Col>
+                <Alert variant="light">
+                    <Row>
+                        <Col md={12}>
+                            <b>Payment Method:</b> <PaymentType payment={orderDetails.paymentMethod} />
+                        </Col>
 
-                           {orderReceipt.taxValue1 > 0 &&
-                               <>
-                                   <Col className="text-end" md={10}>Taxes {orderReceipt.taxCode1}:</Col>
-                                   <Col md={2}>${orderReceipt.taxValue1}</Col>
-                               </>
-                           }
+                        <Col className="text-end" md={10}>Sub Total:</Col>
+                        <Col md={2}>{orderDetails.orderSubTotal ? '$' + orderDetails.orderSubTotal : 'free'}</Col>
 
-                           {orderReceipt.taxValue2 > 0 &&
-                               <>
-                                   <Col className="text-end" md={10}>Taxes {orderReceipt.taxCode2}:</Col>
-                                   <Col md={2}>${orderReceipt.taxValue2}</Col>
-                               </>
-                           }
+                        {+orderDetails.taxValue1 > 0 &&
+                            <>
+                                <Col className="text-end" md={10}>Taxes {orderDetails.taxCode1}:</Col>
+                                <Col md={2}>${orderDetails.taxValue1}</Col>
+                            </>
+                        }
 
-                           <Col className="text-end" md={10}>Shipping:</Col>
-                           <Col md={2}>{orderReceipt.shipping ? '$' + orderReceipt.shipping : 'free'}</Col>
-                           <Col md={2}>{orderReceipt.shippingInsurance ? '$' + orderReceipt.shippingInsurance : 'No insurance'}</Col>
-                           <Col className="text-end" md={10}>Total:</Col>
-                           <Col md={2}>{orderReceipt.orderTotal ? '$' + orderReceipt.orderTotal : 'free'}</Col>
-                       </Row>
-                   </Alert>
+                        {+orderDetails.taxValue2 > 0 &&
+                            <>
+                                <Col className="text-end" md={10}>Taxes {orderDetails.taxCode2}:</Col>
+                                <Col md={2}>${orderDetails.taxValue2}</Col>
+                            </>
+                        }
+
+                        <Col className="text-end" md={10}>Shipping:</Col>
+                        <Col md={2}>{orderDetails.shipping ? '$' + orderDetails.shipping : 'free'}</Col>
+
+                        {+orderDetails.shippingInsurance > 0 &&
+                            <>
+                                <Col className="text-end" md={10}>Shipping Insurance:</Col>
+                                <Col md={2}>${orderDetails.shippingInsurance}</Col>
+                            </>
+                        }
+
+                        <Col className="text-end" md={10}>Total:</Col>
+                        <Col md={2}>{orderDetails.orderTotal ? '$' + orderDetails.orderTotal : 'free'}</Col>
+                    </Row>
+                </Alert>
             </Col>
 
-        </Row>
-
-        <Row>
-           <Col>
+            <Col md={12}>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -84,17 +99,25 @@ const OrderReceiptView = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        
+                           {orderProducts.map(p => (
+                                <tr key={p.shoppingCartID}>
+                                    <td>{p.productSku}</td>
+                                    <td>{p.brandName}/{p.productName}</td>
+                                    <td>{p.qty}</td>
+                                    <td>{p.days && <RentalTerm term={p.days} />}</td>
+                                </tr>)
+                           )}
                     </tbody>
                 </Table>
-           </Col>
-        </Row>
+            </Col>
 
-        <Row className="justify-content-md-center" style={{ marginTop: '50px' }}>          
-            <Col className="text-end">
-                <Button variant="success" size="lg">Back to My Account</Button>
+            <Col md={12} className="text-end">
+                <Link to='/account'>
+                    <Button variant="success" size="lg">Back to My Account</Button>
+                </Link>
             </Col>
         </Row>
+    }
     </>
    )
 }

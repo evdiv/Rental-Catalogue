@@ -204,17 +204,18 @@ const getReceipt = async (orderID, { accountsID }) => {
         throw Error("Order is not found")
     }
 
-    sql = `SELECT sc.productsID, sc.rentalRate, sc.qty, sc.days, p.BrandName, p.productName, p.productSku, p.productModel
+    sql = `SELECT sc.shoppingCartID, sc.productsID, sc.rentalRate, sc.qty, sc.days, p.brandName, p.productName, p.productSku, p.productModel
                 FROM shoppingcart AS sc, products AS p
                 WHERE sc.productsID = p.productsID
-                AND sc.orderID = ?`;
+                AND sc.orderID = ?
+                AND sc.accountsID = ?`;
 
     const orderProducts = await execute(sql, params)
     if (!orderProducts.length) {
         throw Error("Order products are not found")
     }
 
-    return { orderDetails, orderProducts}
+    return { orderDetails: orderDetails[0], orderProducts}
 }
 
 const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {

@@ -32,7 +32,7 @@ export const completeOrder = (transaction) => async(dispatch, getState) => {
                 Authorization: `Bearer ${getState().account.token}`
             }
         }
-        const { ordersID } = getState().order.orderDetails
+        const { ordersID } = transaction
         await axios.put(`/api/v1/orders/${ordersID}/complete`, { transaction }, config)
 
         dispatch({ type: "COMPLETE_ORDER_SUCCESS" })

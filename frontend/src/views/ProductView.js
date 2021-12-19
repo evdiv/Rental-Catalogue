@@ -6,20 +6,18 @@ import { hideCartConfirmation } from '../actions/cartActions'
 import Breadcrumbs from '../components/Breadcrumbs'
 import AddToCart from '../components/AddToCart'
 import { AlertMsg } from '../components/AlertMsg'
-import dotenv from 'dotenv'
 
 
 const ProductView = ({match}) => {
 
     const [confirmation, setConfirmation] = useState('')
-
+    
     const { product, loading, error } = useSelector(state => state.singleProduct)
     const { newProductAdded } = useSelector(state => state.cart)
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dotenv.config()
         dispatch(getSingleProduct(match.params.id))
     }, [])
 
