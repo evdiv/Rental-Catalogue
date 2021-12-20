@@ -22,8 +22,8 @@ const Header = () => {
                     </LinkContainer>
 
                     <Nav className="me-auto">
-                        <LinkContainer to="/products">
-                            <Nav.Link>Products</Nav.Link>
+                        <LinkContainer to="/departments">
+                            <Nav.Link>Departments</Nav.Link>
                         </LinkContainer>
 
                         <LinkContainer to="/return">

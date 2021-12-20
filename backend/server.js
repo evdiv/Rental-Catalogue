@@ -3,6 +3,7 @@ const express = require('express')
 
 const Product = require('./models/productModel')
 const Brand = require('./models/brandModel')
+const Department = require('./models/departmentModel')
 const User = require('./models/userModel')
 const Province = require('./models/provinceModel')
 const Order = require('./models/orderModel')
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     res.send('...')
 })
+
 
 app.get(`${process.env.API_URI}/products`, async (req, res) => {
     let products = []
@@ -35,11 +37,6 @@ app.get(`${process.env.API_URI}/products`, async (req, res) => {
     res.json(products)
 })
 
-app.get(`${process.env.API_URI}/products/brands/:id`, async (req, res) => {
-    const products = await Product.getByBrandID(req.params.id)
-    res.json(products)
-})
-
 app.get(`${process.env.API_URI}/products/:id`, async (req, res) => {
     const product = await Product.getByID(req.params.id)
     res.json(product)
@@ -48,6 +45,27 @@ app.get(`${process.env.API_URI}/products/:id`, async (req, res) => {
 app.get(`${process.env.API_URI}/brands`, async (req, res) => {
     const brands = await Brand.getAll()
     res.json(brands)
+})
+
+app.get(`${process.env.API_URI}/brands/:id/products`, async (req, res) => {
+    const products = await Product.getByBrandID(req.params.id)
+    res.json(products)
+})
+
+app.get(`${process.env.API_URI}/brands/:id`, async (req, res) => {
+    const brand = await Brand.getByID(req.params.id)
+    res.json(brand)
+})
+
+app.get(`${process.env.API_URI}/departments`, async (req, res) => {
+    const departments = await Department.getAll()
+    const departmentsTree = Department.getTree(departments)
+    res.json(departmentsTree)
+})
+
+app.get(`${process.env.API_URI}/departments/:id`, async (req, res) => {
+    const department = await Department.getByID(req.params.id)
+    res.json(department)
 })
 
 app.get(`${process.env.API_URI}/provinces`, async (req, res) => {

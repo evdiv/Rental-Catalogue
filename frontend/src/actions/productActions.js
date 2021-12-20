@@ -41,7 +41,7 @@ export const getBrandProducts = (id) => async (dispatch) => {
     try{
         dispatch({ type: 'BRAND_PRODUCTS_REQUEST'})
 
-        const { data } = await axios.get(`/api/v1/products/brands/${id}`)
+        const { data } = await axios.get(`/api/v1/brands/${id}/products`)
         dispatch({ type: 'BRAND_PRODUCTS_SUCCESS', payload: data})
     } catch(error) {
         dispatch({ type: 'BRAND_PRODUCTS_FAIL', payload: error.message })

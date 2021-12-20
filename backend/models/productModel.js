@@ -1,33 +1,81 @@
 const execute = require('../db')
 
 const getAll = async () => {
-    const sql = 'SELECT * FROM products WHERE active = 1 AND rentalRate > 0 LIMIT 10';
-    return await execute(sql)
+    const sql = `SELECT productsID, brandID, brandName, productName, productDescription, productSku, productModel, image1, stockAvail,
+                    featured, onSale, rentalRate, reviewCount
+                    FROM products 
+                    WHERE active = 1 
+                    AND rentalRate > 0 
+                    LIMIT 30`;
+    const rows = await execute(sql)
+    if (!rows[0]) {
+        throw Error("Products are not found")
+    }
+    return rows
 }
 
 const getByID = async (id) => {
     id = id || 0
-    const sql = 'SELECT * FROM products WHERE active = 1 AND productsID = ?';
+    const sql = `SELECT productsID, brandID, brandName, productName, productDescription, productSku, productModel, image1, stockAvail,
+                    featured, onSale, rentalRate, reviewCount
+                    FROM products 
+                    WHERE active = 1 
+                    AND productsID = ?`;
     const params = [id]
     const rows = await execute(sql, params)
+
+    if (!rows[0]) {
+        throw Error("Product is not found")
+    }
     return rows[0]
 }
 
 const getFeatured = async() => {
-    const sql = 'SELECT * FROM products WHERE active = 1 AND rentalRate > 0 AND featured = 1 LIMIT 6';
-    return await execute(sql)
+    const sql = `SELECT productsID, brandID, brandName, productName, productDescription, productSku, productModel, image1, stockAvail, 
+                    rentalRate, reviewCount, reviewCount
+                    FROM products 
+                    WHERE active = 1 
+                    AND rentalRate > 0 
+                    AND featured = 1 
+                    LIMIT 6`;
+    const rows = await execute(sql)
+    if (!rows[0]) {
+        throw Error("Featured products are not found")
+    }
+    return rows
 }
 
 const getOnSale = async () => {
-    const sql = 'SELECT * FROM products WHERE active = 1 AND rentalRate > 0 AND onSale = 1 LIMIT 6';
-    return await execute(sql)
+    const sql = `SELECT productsID, brandID, brandName, productName, productDescription, productSku, productModel, image1, stockAvail, 
+                    rentalRate, reviewCount
+                    FROM products 
+                    WHERE active = 1 
+                    AND rentalRate > 0 
+                    AND onSale = 1 
+                    LIMIT 6`;
+    const rows = await execute(sql)
+
+    if (!rows[0]) {
+        throw Error("On Sale products are not found")
+    }
+    return rows
 }
 
 const getByBrandID = async(id) => {
     id = id || 0
-    const sql = 'SELECT * FROM products WHERE active = 1 AND rentalRate > 0 AND brandID = ?';
+    const sql = `SELECT productsID, brandID, brandName, productName, productDescription, productSku, productModel, image1, stockAvail,
+                    featured, reviewCount, onSale, rentalRate
+                    FROM products 
+                    WHERE active = 1 
+                    AND rentalRate > 0 
+                    AND brandID = ?`;
     const params = [id]
-    return await execute(sql, params)
+    const rows = await execute(sql, params)
+
+    if (!rows[0]) {
+        throw Error("Products are not found")
+    }
+    return rows
 }
 
 module.exports = { getAll, getByID, getFeatured, getByBrandID, getOnSale }

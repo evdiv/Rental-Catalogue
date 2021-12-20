@@ -3,6 +3,7 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { featuredProductsReducer, onSaleProductsReducer, singleProductReducer, brandProductsReducer} from './reducers/productReducers'
 import { allBrandsReducer, singleBrandReducer } from './reducers/brandReducers'
+import { allDepartmentsReducer, singleDepartmentReducer } from './reducers/departmentReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { accountReducer } from './reducers/accountReducers'
 import { provinceReducer } from './reducers/provinceReducers'
@@ -17,6 +18,8 @@ const reducer = combineReducers({
     brandProducts: brandProductsReducer,
     allBrands: allBrandsReducer,
     singleBrand: singleBrandReducer,
+    allDepartments: allDepartmentsReducer, 
+    singleDepartment: singleDepartmentReducer,
     cart: cartReducer,
     account: accountReducer,
     provinces: provinceReducer,

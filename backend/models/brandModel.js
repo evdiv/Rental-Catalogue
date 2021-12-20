@@ -2,16 +2,31 @@ const execute = require('../db')
 
 
 const getAll = async () => {
-    const sql = 'SELECT * FROM brands WHERE active = 1';
-    return await execute(sql)
+    const sql = `SELECT brandsID, brandName, brandDescription 
+                    FROM brands 
+                    WHERE active = 1`;
+
+    const rows = await execute(sql)
+    if (!rows[0]) {
+        throw Error("Brands are not found")
+    }
+    return rows
 }
 
 const getByID = async(id) => {
     id = id || 0
-    const sql = 'SELECT * FROM brands WHERE active = 1 AND brandsID = ? LIMIT 20';
-    const params = [id]
+    const sql = `SELECT brandsID, brandName, brandDescription 
+                    FROM brands 
+                    WHERE active = 1 
+                    AND brandsID = ?`;
 
-    return await execute(sql, params)
+    const params = [id]
+    const rows = await execute(sql, params)
+
+    if (!rows[0]) {
+        throw Error("Brand is not found")
+    }
+    return rows[0]
 }
 
 module.exports = { getAll, getByID }
