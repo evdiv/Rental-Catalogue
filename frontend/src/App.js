@@ -14,6 +14,8 @@ import CheckoutView from './views/CheckoutView'
 import OrderView from './views/OrderView'
 import OrderReceiptView from './views/OrderReceiptView'
 import DepartmentsView from './views/DepartmentsView'
+import DepartmentProductsView from './views/DepartmentProductsView'
+
 
 const App = () =>{
   return (
@@ -23,9 +25,10 @@ const App = () =>{
             <main>
                 <Route path="/" component={HomeView} exact />
                 <Route path="/cart" component={CartView} />
-				        <Route path="/departments" component={DepartmentsView} />
                 <Route path="/brands/:id" component={BrandProductsView}/>
                 <Route path="/products/:id" component={ProductView} />
+                <Route path="/departments" component={DepartmentsView} exact/>
+                <Route path="/departments/:id" component={DepartmentProductsView} />
                 <Route path="/login" component={LoginView} />
                 <Route path="/register" component={RegisterAccountView} />
                 <Route path="/account" component={MyAccountView} />

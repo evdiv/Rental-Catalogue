@@ -68,6 +68,11 @@ app.get(`${process.env.API_URI}/departments/:id`, async (req, res) => {
     res.json(department)
 })
 
+app.get(`${process.env.API_URI}/departments/:id/products`, async (req, res) => {
+    const products = await Product.getByDepartmentID(req.params.id)
+    res.json(products)
+})
+
 app.get(`${process.env.API_URI}/provinces`, async (req, res) => {
     const provinces = await Province.getAll()
     res.json(provinces)

@@ -24,7 +24,6 @@ export const onSaleProductsReducer = (state = { products: [] }, action) => {
     }
 }
 
-
 export const singleProductReducer = (state ={product: {}}, action) => {
     switch(action.type) {
         case 'SINGLE_PRODUCT_REQUEST':
@@ -51,3 +50,15 @@ export const brandProductsReducer = (state ={products: []}, action) => {
     }
 }
 
+export const departmentProductsReducer = (state = { products: [] }, action) => {
+    switch (action.type) {
+        case 'DEPARTMENTS_PRODUCTS_REQUEST':
+            return { products: [], loading: true }
+        case 'DEPARTMENTS_PRODUCTS_SUCCESS':
+            return { products: action.payload, loading: false }
+        case 'DEPARTMENTS_PRODUCTS_FAIL':
+            return { products: [], error: action.payload, loading: false }
+        default:
+            return state
+    }
+}

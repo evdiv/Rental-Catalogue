@@ -13,11 +13,11 @@ export const allDepartmentsReducer = (state = { departments: [] }, action) => {
 
 export const singleDepartmentReducer = (state = { department: {} }, action) => {
     switch (action.type) {
-        case "SINGLE_DEPARTMENT_REQUEST":
+        case "GET_DEPARTMENT_REQUEST":
             return {...state, loading: true}
-        case "SINGLE_DEPARTMENT_SUCCESS":
+        case "GET_DEPARTMENT_SUCCESS":
             return {department: action.payload, loading: false}
-        case "SINGLE_DEPARTMENT_FAIL":
+        case "GET_DEPARTMENT_FAIL":
             return { department: {}, error: action.payload, loading: false}
         default:
             return state

@@ -14,12 +14,12 @@ export const getAllDepartments = () => async (dispatch) => {
 
 export const getSingleDepartment = (id) => async (dispatch) => {
     try {
-        dispatch({ type: "SINGLE_DEPARTMENT_REQUEST" })
+        dispatch({ type: "GET_DEPARTMENT_REQUEST" })
 
         const {data} = await axios.get(`/api/v1/departments/${id}`)
-        dispatch({ type: "SINGLE_DEPARTMENT_SUCCESS", payload: data })
+        dispatch({ type: "GET_DEPARTMENT_SUCCESS", payload: data })
 
     } catch (error) {
-        dispatch({ type: "SINGLE_DEPARTMENT_FAIL", payload: error.message })
+        dispatch({ type: "GET_DEPARTMENT_FAIL", payload: error.message })
     }
 }

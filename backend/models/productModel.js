@@ -78,4 +78,24 @@ const getByBrandID = async(id) => {
     return rows
 }
 
-module.exports = { getAll, getByID, getFeatured, getByBrandID, getOnSale }
+const getByDepartmentID = async (id) => {
+    id = id || 0
+    const sql = `SELECT p.productsID, p.brandID, p.brandName, p.productName, p.productDescription, 
+                    p.productSku, p.productModel, p.image1, p.stockAvail, p.featured, p.reviewCount, 
+                    p.onSale, p.rentalRate
+                    FROM products AS p, departmentproducts AS dp
+                    WHERE dp.ProductsID = p.productsID 
+                    AND p.active = 1 
+                    AND p.rentalRate > 0 
+                    AND dp.DepartmentsID = ?`;
+
+    const params = [id]
+    const rows = await execute(sql, params)
+
+    if (!rows[0]) {
+        throw Error("Products are not found")
+    }
+    return rows
+}
+
+module.exports = { getAll, getByID, getFeatured, getByBrandID, getByDepartmentID, getOnSale }

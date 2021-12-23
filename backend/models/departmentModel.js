@@ -9,7 +9,8 @@ const getByID = async (id) => {
                     ORDER BY departmentsID`;
 
     const params = [id]
-    return await execute(sql, params)
+    const rows = await execute(sql, params)
+    return rows[0]
 }
 
 const getAll = async () => {
@@ -17,7 +18,8 @@ const getAll = async () => {
                     FROM departments 
                     WHERE active = 1
                     ORDER BY departmentsID`;
-    return await execute(sql)
+    const rows = await execute(sql)
+    return rows
 }
 
 const getTree = (departments) => {
