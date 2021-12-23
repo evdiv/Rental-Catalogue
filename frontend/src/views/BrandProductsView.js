@@ -2,6 +2,8 @@ import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
 import ProductPreView from './ProductPreView'
+import { Loader } from '../components/Loader'
+import { AlertMsg } from '../components/AlertMsg'
 import { getBrandProducts } from '../actions/productActions'
 import { getSingleBrand } from '../actions/brandActions'
 
@@ -19,7 +21,7 @@ const BrandProductsView = ({ match }) => {
     return (
         <>        
             <h3>Products for {brand && <>{brand.brandName}</>}</h3>
-            {loading ? <h3>Loading ...</h3> : error ? <h3>{error}</h3> : (
+            {loading ? <Loader /> : error ? <AlertMsg msg={error} variant="danger" /> : (
                 <Row>
                     {products.map(p => (
                         <Col key={p.ProductsID} sm={12} md={3} lg={2} >

@@ -5,9 +5,11 @@ import { Table, Alert, Row, Col, Button} from 'react-bootstrap'
 import { getAccount } from '../actions/accountActions'
 import { getReceipt } from '../actions/orderReceiptActions'
 import { AlertMsg } from '../components/AlertMsg'
+import { Loader } from '../components/Loader'
 import DateConverter from '../components/DateConverter'
 import RentalTerm from '../components/RentalTerm'
 import PaymentType from '../components/PaymentType'
+
 
 const OrderReceiptView = (props) => {
 
@@ -29,7 +31,7 @@ const OrderReceiptView = (props) => {
 
    return (
     <>
-    {loading ? <h3>Loading ...</h3> : error ? <AlertMsg msg={error} variant="danger" /> : ''}
+    {loading ? <Loader /> : error ? <AlertMsg msg={error} variant="danger" /> : ''}
     {orderDetails &&
        <Row className="justify-content-md-center">
             <Col md={6}>

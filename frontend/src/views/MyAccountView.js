@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { Row, Col, Form, Button, Table} from 'react-bootstrap'
 import { AlertMsg } from '../components/AlertMsg'
+import { Loader } from '../components/Loader'
 import { getProvinces } from '../actions/provincesAction'
 import { validateUser } from '../utils/validateUser'
 import { getAccount, updateAccount } from '../actions/accountActions'
@@ -153,7 +155,7 @@ const MyAccountView = (props) => {
             </Col>
            <Col md={6}>
                <h3>My last 10 Orders</h3>
-               {loading ? <h3>Loading ...</h3> 
+               {loading ? <Loader /> 
                 : !orders 
                 ? <p> Orders not found </p> 
                 : <Table striped bordered hover>
@@ -167,7 +169,7 @@ const MyAccountView = (props) => {
                     <tbody>
                        {orders.map(o => (
                            <tr key={o.ordersID}>
-                                <td>{o.ordersID}</td>
+                               <td><Link to={`/receipt/${o.ordersID}`}>{o.ordersID}</Link></td>
                                 <td><DateConverter orderDate={o.orderDate} /></td>
                                 <td>{o.orderTotal}</td>
                             </tr>)

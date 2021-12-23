@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
 import ProductPreView from './ProductPreView'
 import DepartmentMenu from '../components/DepartmentMenu'
+import { Loader } from '../components/Loader'
+import { AlertMsg } from '../components/AlertMsg'
 import { getDepartmentProducts } from '../actions/productActions'
 import { getSingleDepartment, getAllDepartments } from '../actions/departmentActions'
 
@@ -22,13 +24,13 @@ const DepartmentProductsView = ({ match }) => {
     return (
         <Row>
             <Col sm={4} md={2}>
-                {departmentsLoading ? <h3>Loading ...</h3> : departmentsError && <h3>{departmentsError}</h3>}
+                {departmentsLoading ? <Loader /> : departmentsError && <AlertMsg msg={departmentsError} variant="danger" />}
                 {departments.length && <DepartmentMenu departments={departments} departmentId={match.params.id} />}
 
             </Col>  
             <Col sm={8} md={10}>
                 <h3>{department && <>{department.departmentName}</>}</h3>
-                {productLoading ? <h3>Loading ...</h3> : productError ? <h3>{productError}</h3> : (
+                {productLoading ? <Loader /> : productError ? <AlertMsg msg={productError} variant="danger" /> : (
                     <Row>
                         {products.map(p => (
                             <Col key={p.ProductsID} sm={12} md={3} >
