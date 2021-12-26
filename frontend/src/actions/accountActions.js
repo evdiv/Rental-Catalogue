@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { axiosErrorsHandler } from '../utils/errorsHandler'
 
 export const registerAccount = (user) => async(dispatch, getState) => {
     try {
@@ -11,7 +12,7 @@ export const registerAccount = (user) => async(dispatch, getState) => {
         localStorage.setItem('account', JSON.stringify(getState().account.details))
 
     } catch (error) {
-        dispatch({ type: "ACCOUNT_REGISTER_FAIL", payload: error.message})
+        dispatch({ type: "ACCOUNT_REGISTER_FAIL", payload: axiosErrorsHandler(error)})
     }
 }
 
@@ -27,7 +28,7 @@ export const loginAccount = (email, password) => async(dispatch, getState) => {
         localStorage.setItem('token', JSON.stringify(getState().account.token))
 
     } catch (error) {
-        dispatch({ type: "ACCOUNT_LOGIN_FAIL", payload: error.message })
+        dispatch({ type: "ACCOUNT_LOGIN_FAIL", payload: axiosErrorsHandler(error) })
     }
 }
 
@@ -46,7 +47,7 @@ export const getAccount = () => async (dispatch, getState) => {
         dispatch({ type: "ACCOUNT_GET_SUCCESS", payload: data })
 
     } catch (error) {
-        dispatch({ type: "ACCOUNT_GET_FAIL", payload: error.message })
+        dispatch({ type: "ACCOUNT_GET_FAIL", payload: axiosErrorsHandler(error) })
     }
 }
 
@@ -68,7 +69,7 @@ export const updateAccount = (user) => async (dispatch, getState) => {
         localStorage.setItem('account', JSON.stringify(getState().account.details))
 
     } catch (error) {
-        dispatch({ type: "ACCOUNT_UPDATE_FAIL", payload: error.message })
+        dispatch({ type: "ACCOUNT_UPDATE_FAIL", payload: axiosErrorsHandler(error) })
     }
 }
 

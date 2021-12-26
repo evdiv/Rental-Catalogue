@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { axiosErrorsHandler } from '../utils/errorsHandler'
+
 
 export const stageOrder = () => async(dispatch, getState) => {
     try {
@@ -18,7 +20,7 @@ export const stageOrder = () => async(dispatch, getState) => {
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))
 
     } catch (error) {
-        dispatch({ type: "STAGE_ORDER_FAIL", payload: error.message})
+        dispatch({ type: "STAGE_ORDER_FAIL", payload: axiosErrorsHandler(error)})
     }
 }
 
@@ -42,7 +44,7 @@ export const completeOrder = (transaction) => async(dispatch, getState) => {
         localStorage.removeItem('cartProducts')
 
     } catch (error) {
-        dispatch({ type: "COMPLETE_ORDER_FAIL", payload: error.message })
+        dispatch({ type: "COMPLETE_ORDER_FAIL", payload: axiosErrorsHandler(error) })
     }
 }
 
@@ -64,7 +66,7 @@ export const updateShippingInsurance = (insurance) => async(dispatch, getState) 
         localStorage.setItem('order', JSON.stringify(getState().order.orderDetails))
 
     } catch (error) {
-        dispatch({ type: "SET_INSURANCE_FAIL", payload: error.message })
+        dispatch({ type: "SET_INSURANCE_FAIL", payload: axiosErrorsHandler(error) })
     }
 }
 
@@ -82,6 +84,6 @@ export const getOrder = (orderId) => async (dispatch, getState) => {
         dispatch({ type: "GET_ORDER_DETAILS_SUCCESS", payload: data })
 
     } catch (error) {
-        dispatch({ type: "GET_ORDER_DETAILS_FAIL", payload: error.message })
+        dispatch({ type: "GET_ORDER_DETAILS_FAIL", payload: axiosErrorsHandler(error) })
     }
 }

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { axiosErrorsHandler } from '../utils/errorsHandler'
 
 export const getAllDepartments = () => async (dispatch) => {
     try{
@@ -8,7 +9,7 @@ export const getAllDepartments = () => async (dispatch) => {
         dispatch({type: "ALL_DEPARTMENTS_SUCCESS", payload: data})
     
     } catch(error){
-        dispatch({type: "ALL_DEPARTMENTS_FAIL", payload: error.message})
+        dispatch({ type: "ALL_DEPARTMENTS_FAIL", payload: axiosErrorsHandler(error)})
     }
 }
 
@@ -20,6 +21,6 @@ export const getSingleDepartment = (id) => async (dispatch) => {
         dispatch({ type: "GET_DEPARTMENT_SUCCESS", payload: data })
 
     } catch (error) {
-        dispatch({ type: "GET_DEPARTMENT_FAIL", payload: error.message })
+        dispatch({ type: "GET_DEPARTMENT_FAIL", payload: axiosErrorsHandler(error) })
     }
 }

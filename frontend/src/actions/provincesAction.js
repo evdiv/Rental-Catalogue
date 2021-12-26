@@ -1,4 +1,5 @@
 import axios from "axios";
+import { axiosErrorsHandler } from '../utils/errorsHandler'
 
 export const getProvinces = () => async(dispatch) => {
     try {
@@ -9,6 +10,6 @@ export const getProvinces = () => async(dispatch) => {
         dispatch({ type: 'GET_PROVINCES_SUCCESS', payload: data})
 
     } catch(error){
-        dispatch({ type: 'GET_PROVINCES_FAIL', payload: error.message})
+        dispatch({ type: 'GET_PROVINCES_FAIL', payload: axiosErrorsHandler(error)})
     }
 }

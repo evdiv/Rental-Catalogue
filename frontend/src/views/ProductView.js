@@ -6,7 +6,7 @@ import { hideCartConfirmation } from '../actions/cartActions'
 import Breadcrumbs from '../components/Breadcrumbs'
 import AddToCart from '../components/AddToCart'
 import { AlertMsg } from '../components/AlertMsg'
-
+import { Loader } from '../components/Loader'
 
 const ProductView = ({match}) => {
 
@@ -32,7 +32,7 @@ const ProductView = ({match}) => {
 
     return (
         <>  
-            {loading ? <h3>Loading ...</h3> : error ? <AlertMsg msg={error} variant="danger"/> : ''}
+            {loading ? <Loader /> : error ? <AlertMsg msg={error} variant="danger"/> : ''}
             { product.brandName !== undefined && <Breadcrumbs product={product} />}
 
             {confirmation !== '' ? <AlertMsg msg={confirmation} variant="success" /> : ''}

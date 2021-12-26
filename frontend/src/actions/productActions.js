@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { axiosErrorsHandler } from '../utils/errorsHandler'
 
 export const getFeaturedProducts = () => async (dispatch) => {
     try {
@@ -8,7 +9,7 @@ export const getFeaturedProducts = () => async (dispatch) => {
         dispatch({ type: 'FEATURED_PRODUCTS_SUCCESS', payload: data})
         
     } catch(error) {
-        dispatch({ type: 'FEATURED_PRODUCTS_FAIL', payload: error.message })
+        dispatch({ type: 'FEATURED_PRODUCTS_FAIL', payload: axiosErrorsHandler(error) })
     }
 }
 
@@ -20,7 +21,7 @@ export const getOnSaleProducts = () => async (dispatch) => {
         dispatch({ type: 'ONSALE_PRODUCTS_SUCCESS', payload: data })
 
     } catch (error) {
-        dispatch({ type: 'ONSALE_PRODUCTS_FAIL', payload: error.message }) 
+        dispatch({ type: 'ONSALE_PRODUCTS_FAIL', payload: axiosErrorsHandler(error) })
     }
 }
 
@@ -33,7 +34,7 @@ export const getSingleProduct = (id) => async (dispatch) => {
         dispatch({ type: 'SINGLE_PRODUCT_SUCCESS', payload: data})
 
     } catch(error){
-        dispatch({ type: 'SINGLE_PRODUCT_FAIL', payload: error.message})
+        dispatch({ type: 'SINGLE_PRODUCT_FAIL', payload: axiosErrorsHandler(error)})
     }
 }
 
@@ -44,7 +45,7 @@ export const getBrandProducts = (id) => async (dispatch) => {
         const { data } = await axios.get(`/api/v1/brands/${id}/products`)
         dispatch({ type: 'BRAND_PRODUCTS_SUCCESS', payload: data})
     } catch(error) {
-        dispatch({ type: 'BRAND_PRODUCTS_FAIL', payload: error.message })
+        dispatch({ type: 'BRAND_PRODUCTS_FAIL', payload: axiosErrorsHandler(error) })
     }
 }
 
@@ -55,6 +56,6 @@ export const getDepartmentProducts = (id) => async (dispatch) => {
         const { data } = await axios.get(`/api/v1/departments/${id}/products`)
         dispatch({ type: 'DEPARTMENTS_PRODUCTS_SUCCESS', payload: data })
     } catch (error) {
-        dispatch({ type: 'DEPARTMENTS_PRODUCTS_FAIL', payload: error.message })
+        dispatch({ type: 'DEPARTMENTS_PRODUCTS_FAIL', payload: axiosErrorsHandler(error) })
     }
 }

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { axiosErrorsHandler } from '../utils/errorsHandler'
 
 export const getReceipt = (orderId) => async (dispatch, getState) => {
     try {
@@ -14,6 +15,6 @@ export const getReceipt = (orderId) => async (dispatch, getState) => {
         dispatch({ type: "GET_ORDER_RECEIPT_SUCCESS", payload: data })
 
     } catch (error) { 
-        dispatch({ type: "GET_ORDER_RECEIPT_FAIL", payload: error.message })
+        dispatch({ type: "GET_ORDER_RECEIPT_FAIL", payload: axiosErrorsHandler(error) })
     }
 }

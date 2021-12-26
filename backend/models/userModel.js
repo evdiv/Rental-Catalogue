@@ -27,7 +27,7 @@ const store = async(reqBody) => {
     }
 
     const accountsID = result.insertId
-    const token = generateToken(accountsID)
+    const token = generateToken.account(accountsID)
 
     return { accountsID, token}
 }
@@ -137,7 +137,7 @@ const login = async (reqBody) => {
         throw Error("System Error")
     }
 
-    const token = generateToken(rows[0].accountsID)
+    const token = generateToken.account(rows[0].accountsID)
 
     return { user: rows[0], token}
 }

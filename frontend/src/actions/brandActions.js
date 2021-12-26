@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { axiosErrorsHandler } from '../utils/errorsHandler'
 
 export const getAllBrands = () => async (dispatch) => {
     try{
@@ -8,7 +9,7 @@ export const getAllBrands = () => async (dispatch) => {
         dispatch({type: "ALL_BRANDS_SUCCESS", payload: data})
     
     } catch(error){
-        dispatch({type: "ALL_BRANDS_FAIL", payload: error.message})
+        dispatch({ type: "ALL_BRANDS_FAIL", payload: axiosErrorsHandler(error)})
     }
 }
 
@@ -20,6 +21,6 @@ export const getSingleBrand = (id) => async (dispatch) => {
         dispatch({ type: "SINGLE_BRAND_SUCCESS", payload: data })
 
     } catch (error) {
-        dispatch({ type: "SINGLE_BRAND_FAIL", payload: error.message })
+        dispatch({ type: "SINGLE_BRAND_FAIL", payload: axiosErrorsHandler(error) })
     }
 }

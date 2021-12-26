@@ -2,27 +2,25 @@ import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Form, Button} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-import { loginAccount } from '../actions/accountActions'
-import { AlertMsg } from '../components/AlertMsg'
-import { Loader } from '../components/Loader'
+import { loginAdmin } from '../../actions/admin/adminActions'
+import { AlertMsg } from '../../components/AlertMsg'
+import { Loader } from '../../components/Loader'
 
 const LoginView = (props) => {
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const dispatch = useDispatch()
-    const { details, loading, error } = useSelector(state => state.account)
-
+    const { details, loading, error } = useSelector(state => state.admin)
 
     const loginHandler = (e) => {
         e.preventDefault()
-        dispatch(loginAccount(email, password))
+        dispatch(loginAdmin(email, password))
     }
 
     useEffect(() => {
         if (details.email !== undefined) {
-            props.history.push('/account')
+            props.history.push('/admin/details')
         }
     }, [details.email, props.history])
 
@@ -30,7 +28,7 @@ const LoginView = (props) => {
        <Row className="justify-content-md-center">
             <Col md={4}>
                {loading ? <Loader /> : error ? <AlertMsg msg={error} variant="danger" /> : ''}
-               <h3>Login</h3>
+               <h3>Admin Login</h3>
                <Form>
                    <Form.Group className="mb-3" controlId="formBasicEmail">
                        <Form.Label>Email address</Form.Label>

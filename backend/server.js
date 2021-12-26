@@ -9,6 +9,7 @@ const Province = require('./models/provinceModel')
 const Order = require('./models/orderModel')
 const Transaction = require('./models/transactionModel')
 const ShoppingCart = require('./models/shoppingCartModel')
+const Admin = require('./models/adminModel')
 
 const restrict = require('./middleware/authMiddleware')
 
@@ -79,7 +80,7 @@ app.get(`${process.env.API_URI}/provinces`, async (req, res) => {
 })
 
 // Get User
-app.get(`${process.env.API_URI}/users`, restrict, async (req, res) => {
+app.get(`${process.env.API_URI}/users`, restrict.user, async (req, res) => {
     try {
         const {password, ...user} = await User.getByID(req.body)
         res.json(user)
@@ -89,7 +90,7 @@ app.get(`${process.env.API_URI}/users`, restrict, async (req, res) => {
 })
 
 //Update User
-app.put(`${process.env.API_URI}/users`, restrict, async (req, res) => {
+app.put(`${process.env.API_URI}/users`, restrict.user, async (req, res) => {
     try {
         const user = await User.update(req.body)
         res.json(user)
@@ -129,8 +130,19 @@ app.post(`${process.env.API_URI}/users/login`, async (req, res) => {
     }
 })
 
+//LogIn an Admin
+app.post(`${process.env.API_URI}/admins/login`, async (req, res) => {
+    try {
+        const { admin, token } = await Admin.login(req.body)
+        res.json({ admin, token })
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+
 // Get Completed Orders
-app.get(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
+app.get(`${process.env.API_URI}/orders`, restrict.user, async (req, res) => {
     try {
         const orders = await Order.getCreatedByUser(req.body.accountsID)
         res.json(orders)
@@ -140,7 +152,7 @@ app.get(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
 })
 
 // Get Order
-app.get(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
+app.get(`${process.env.API_URI}/orders/:id`, restrict.user, async (req, res) => {
     try {
         const order = await Order.getByID(req.params.id)
         res.json(order)
@@ -150,7 +162,7 @@ app.get(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
 })
 
 // Get Completed Order Receipt
-app.get(`${process.env.API_URI}/orders/:id/receipt`, restrict, async (req, res) => {
+app.get(`${process.env.API_URI}/orders/:id/receipt`, restrict.user, async (req, res) => {
     try {
         const receipt = await Order.getReceipt(req.params.id, req.body)
         res.json(receipt)
@@ -160,7 +172,7 @@ app.get(`${process.env.API_URI}/orders/:id/receipt`, restrict, async (req, res) 
 })
 
 // Create a new Order
-app.post(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
+app.post(`${process.env.API_URI}/orders`, restrict.user, async (req, res) => {
     try {
         const orderID = await Order.store(req.body)
 
@@ -176,7 +188,7 @@ app.post(`${process.env.API_URI}/orders`, restrict, async (req, res) => {
 })
 
 //Update Order with Payment
-app.put(`${process.env.API_URI}/orders/:id/complete`, restrict, async (req, res) => {
+app.put(`${process.env.API_URI}/orders/:id/complete`, restrict.user, async (req, res) => {
     try {
         //
         // In Production app here should be requests to the Payment Providers for getting transaction details
@@ -200,7 +212,7 @@ app.put(`${process.env.API_URI}/orders/:id/complete`, restrict, async (req, res)
 
 
 //Update Order Details
-app.put(`${process.env.API_URI}/orders/:id`, restrict, async (req, res) => {
+app.put(`${process.env.API_URI}/orders/:id`, restrict.user, async (req, res) => {
     try {
         const updated = await Order.update(req.params.id, req.body)
         if(!updated){
