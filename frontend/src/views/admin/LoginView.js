@@ -27,7 +27,7 @@ const LoginView = (props) => {
    return (
        <Row className="justify-content-md-center">
             <Col md={4}>
-               {loading ? <Loader /> : error ? <AlertMsg msg={error} variant="danger" /> : ''}
+               {loading ? <Loader /> : error && <AlertMsg msg={error} variant="danger" />}
                <h3>Admin Login</h3>
                <Form>
                    <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -57,10 +57,6 @@ const LoginView = (props) => {
                        Submit
                    </Button>
                </Form>
-               
-                <LinkContainer to="/register">
-                   <a href="/register"><small>Don't have an account? Register now</small></a>
-                </LinkContainer>
             </Col>
        </Row>
    )

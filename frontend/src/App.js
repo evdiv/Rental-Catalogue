@@ -7,7 +7,7 @@ const App = () =>{
   	return (
     	<BrowserRouter>
 			<Switch>
-				<Route path='/admin/:path?' exact>
+				<Route path={'/admin/:path?', '/admin/:path?/:path?'} exact>
 					<AdminApp />
 				</Route>
 				<Route>

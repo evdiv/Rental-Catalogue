@@ -1,18 +1,18 @@
-export const orderReducer = (state = { orderDetails: {}, completed: false}, action) => {
+export const userOrderReducer = (state = { orderDetails: {}, completed: false}, action) => {
     switch (action.type) {
-        case "STAGE_ORDER_REQUEST":
+        case "STAGE_USER_ORDER_REQUEST":
             return { ...state, loading: true }
-        case "STAGE_ORDER_SUCCESS":
+        case "STAGE_USER_ORDER_SUCCESS":
             return { orderDetails: action.payload, loading: false }
-        case "STAGE_ORDER_FAIL":
+        case "STAGE_USER_ORDER_FAIL":
             return { ...state, loading: false, error: action.payload }
 
 
-        case "COMPLETE_ORDER_REQUEST":
+        case "COMPLETE_USER_ORDER_REQUEST":
             return { ...state, loading: true }
-        case "COMPLETE_ORDER_SUCCESS":
+        case "COMPLETE_USER_ORDER_SUCCESS":
             return { orderDetails: {}, completed: true, loading: false }
-        case "COMPLETE_ORDER_FAIL":
+        case "COMPLETE_USER_ORDER_FAIL":
             return { ...state, loading: false, error: action.payload }
 
 
@@ -24,14 +24,14 @@ export const orderReducer = (state = { orderDetails: {}, completed: false}, acti
             return { ...state, loading: false, error: action.payload }
 
         
-        case "GET_ORDER_DETAILS_REQUEST":
+        case "GET_USER_ORDER_DETAILS_REQUEST":
             return { ...state, loading: true }
-        case "GET_ORDER_DETAILS_SUCCESS":
+        case "GET_USER_ORDER_DETAILS_SUCCESS":
             return { orderDetails: action.payload, loading: false }
-        case "GET_ORDER_DETAILS_FAIL":
+        case "GET_USER_ORDER_DETAILS_FAIL":
             return { orderDetails: {}, loading: false, error: action.payload }
 
-        case "RESET_ORDER_DETAILS":
+        case "RESET_USER_ORDER_DETAILS":
             return { orderDetails: {}, loading: false }
             
 

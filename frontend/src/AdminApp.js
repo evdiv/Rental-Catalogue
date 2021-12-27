@@ -4,7 +4,6 @@ import Container from 'react-bootstrap/Container'
 import Header from './components/admin/Header'
 import Footer from './components/admin/Footer'
 import OrdersView from './views/admin/OrdersView'
-import OrderView from './views/admin/OrderView'
 import ProductsView from './views/admin/ProductsView'
 import ProductView from './views/admin/ProductView'
 import DepartmentsView from './views/admin/DepartmentsView'
@@ -31,7 +30,6 @@ const AdminApp = () =>{
                         <Route path="/admin/brands" component={BrandsView} exact />
                         <Route path="/admin/brands/:id" component={BrandView} />
                         <Route path="/admin/orders" component={OrdersView} exact/>
-                        <Route path="/admin/orders/:id" component={OrderView} />
                         <Route path="/admin/users" component={UsersView} exact />
                         <Route path="/admin/users/:id" component={UserView} />
                     </main>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Table, Form, Alert, Row, Col, Button} from 'react-bootstrap'
 import { getAccount } from '../actions/accountActions'
-import { stageOrder, completeOrder, updateShippingInsurance } from '../actions/orderActions'
+import { stageOrder, completeOrder, updateShippingInsurance } from '../actions/userOrderActions'
 import RentalTerm from '../components/RentalTerm'
 import PaymentType from '../components/PaymentType'
 
@@ -12,7 +12,7 @@ const OrderView = (props) => {
 
     const { details } = useSelector(state => state.account)
     const { cartProducts } = useSelector(state => state.cart)
-    const { orderDetails } = useSelector(state => state.order)
+    const { orderDetails } = useSelector(state => state.userOrder)
 
     const [shippingInsurance, setShippingInsurance] = useState(orderDetails.shippingInsurance)
     const [paymentMethod, setPaymentMethod] = useState('cc')

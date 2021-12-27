@@ -2,6 +2,26 @@ const execute = require('../db')
 const ShoppingCart = require('./shoppingCartModel')
 const Shipping = require('./shippingModel')
 
+const getAll = async () => {
+
+    //TODO: Add pagination
+    const sql = `SELECT o.ordersID, o.orderDate, o.transAmount, o.orderTotal, a.firstName, 
+                    a.lastName, a.homeCity, a.email, a.homePhone, p.provinceName, t.paymentMethod
+                    FROM orders AS o, accounts AS a, provinces AS p, transactions As t
+                    WHERE o.active = 1 
+                    AND o.accountsID = a.accountsID
+                    AND a.provincesID = p.provincesID
+                    AND o.ordersID = t.ordersID
+                    ORDER BY o.ordersID DESC
+                    LIMIT 40`;
+
+    const rows = await execute(sql)
+    if (!rows[0]) {
+        throw Error("Orders are not found")
+    }
+    return rows
+}
+
 const getCreatedByUser = async(userId) => {
     userId = userId || 0
     if (userId === 0) {
@@ -151,8 +171,6 @@ const complete = async (id, reqBody) => {
 }
 
 
-
-
 const getTaxes = async (accountsID, totalCost) => {
     const errors = validate({ accountsID, totalCost }, 'taxes')
     if (errors.length > 0) {
@@ -262,4 +280,4 @@ const validate = ({ id, accountsID, totalCost, cartProducts }, action) => {
 }
 
 
-module.exports = { getByID, getReceipt, store, update, complete, getCreatedByUser }
+module.exports = { getAll, getByID, getReceipt, store, update, complete, getCreatedByUser }

@@ -160,8 +160,19 @@ app.put(`${process.env.API_URI}/admins`, restrict.admin, async (req, res) => {
     }
 })
 
-// Get Completed Orders
-app.get(`${process.env.API_URI}/orders`, restrict.user, async (req, res) => {
+// Get All Orders
+app.get(`${process.env.API_URI}/orders`, restrict.admin, async (req, res) => {
+    try {
+        const orders = await Order.getAll()
+        res.json(orders)
+    } catch (err) {
+        res.status(404).send({ error: err.message })
+    }
+})
+
+
+// Get Completed Orders placed by LoggedIn User
+app.get(`${process.env.API_URI}/user-orders`, restrict.user, async (req, res) => {
     try {
         const orders = await Order.getCreatedByUser(req.body.accountsID)
         res.json(orders)
@@ -170,8 +181,8 @@ app.get(`${process.env.API_URI}/orders`, restrict.user, async (req, res) => {
     }
 })
 
-// Get Order
-app.get(`${process.env.API_URI}/orders/:id`, restrict.user, async (req, res) => {
+// Get Order placed by LoggedIn User 
+app.get(`${process.env.API_URI}/user-orders/:id`, restrict.user, async (req, res) => {
     try {
         const order = await Order.getByID(req.params.id)
         res.json(order)
@@ -181,7 +192,7 @@ app.get(`${process.env.API_URI}/orders/:id`, restrict.user, async (req, res) => 
 })
 
 // Get Completed Order Receipt
-app.get(`${process.env.API_URI}/orders/:id/receipt`, restrict.user, async (req, res) => {
+app.get(`${process.env.API_URI}/user-orders/:id/receipt`, restrict.user, async (req, res) => {
     try {
         const receipt = await Order.getReceipt(req.params.id, req.body)
         res.json(receipt)
@@ -191,7 +202,7 @@ app.get(`${process.env.API_URI}/orders/:id/receipt`, restrict.user, async (req, 
 })
 
 // Create a new Order
-app.post(`${process.env.API_URI}/orders`, restrict.user, async (req, res) => {
+app.post(`${process.env.API_URI}/user-orders`, restrict.user, async (req, res) => {
     try {
         const orderID = await Order.store(req.body)
 
@@ -207,7 +218,7 @@ app.post(`${process.env.API_URI}/orders`, restrict.user, async (req, res) => {
 })
 
 //Update Order with Payment
-app.put(`${process.env.API_URI}/orders/:id/complete`, restrict.user, async (req, res) => {
+app.put(`${process.env.API_URI}/user-orders/:id/complete`, restrict.user, async (req, res) => {
     try {
         //
         // In Production app here should be requests to the Payment Providers for getting transaction details
@@ -231,7 +242,7 @@ app.put(`${process.env.API_URI}/orders/:id/complete`, restrict.user, async (req,
 
 
 //Update Order Details
-app.put(`${process.env.API_URI}/orders/:id`, restrict.user, async (req, res) => {
+app.put(`${process.env.API_URI}/user-orders/:id`, restrict.user, async (req, res) => {
     try {
         const updated = await Order.update(req.params.id, req.body)
         if(!updated){

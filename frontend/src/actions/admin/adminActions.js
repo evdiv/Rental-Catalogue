@@ -10,6 +10,7 @@ export const loginAdmin = (email, password) => async(dispatch, getState) => {
         dispatch({ type: "ADMIN_LOGIN_SUCCESS", payload: data })
 
         localStorage.setItem('token', JSON.stringify(getState().admin.token))
+        localStorage.setItem('admin', JSON.stringify(getState().admin.details))
 
     } catch (error) {
         dispatch({ type: "ADMIN_LOGIN_FAIL", payload: axiosErrorsHandler(error) })

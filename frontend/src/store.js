@@ -8,9 +8,10 @@ import { cartReducer } from './reducers/cartReducers'
 import { accountReducer } from './reducers/accountReducers'
 import { adminReducer } from './reducers/adminReducers'
 import { provinceReducer } from './reducers/provinceReducers'
-import { orderReducer } from './reducers/orderReducers'
 import { orderReceiptReducer } from './reducers/orderReceiptReducers'
+import { userOrderReducer } from './reducers/userOrderReducers'
 import { userOrdersReducer } from './reducers/userOrdersReducers'
+import { ordersReducer } from './reducers/ordersReducers'
 
 const reducer = combineReducers({
     featuredProducts: featuredProductsReducer,
@@ -25,8 +26,9 @@ const reducer = combineReducers({
     cart: cartReducer,
     account: accountReducer,
     admin: adminReducer,
+    orders: ordersReducer,
     provinces: provinceReducer,
-    order: orderReducer,
+    userOrder: userOrderReducer,
     receipt: orderReceiptReducer,
     userOrders: userOrdersReducer
 })
@@ -47,15 +49,15 @@ const tokenLocalStorage = localStorage.getItem('token')
     ? JSON.parse(localStorage.getItem('token'))
     : ''
 
-const orderLocalStorage = localStorage.getItem('order')
-    ? JSON.parse(localStorage.getItem('order'))
+const userOrderLocalStorage = localStorage.getItem('userOrder')
+    ? JSON.parse(localStorage.getItem('userOrder'))
     : ''
 
 const initialState = {
     cart: { cartProducts: cartLocalStorage },
     account: { details: accountLocalStorage, token: tokenLocalStorage},
     admin: { details: adminLocalStorage, token: tokenLocalStorage },
-    order: { orderDetails: orderLocalStorage}
+    userOrder: { orderDetails: userOrderLocalStorage}
 }
 
 const middleware = [thunk]

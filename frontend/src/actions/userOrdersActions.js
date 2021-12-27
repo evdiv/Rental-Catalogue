@@ -11,7 +11,7 @@ export const getUserOrders = () => async (dispatch, getState) => {
                 Authorization: `Bearer ${getState().account.token}`
             }
         }
-        const { data } = await axios.get(`/api/v1/orders`, config)
+        const { data } = await axios.get(`/api/v1/user-orders`, config)
         dispatch({ type: "GET_USER_ORDERS_SUCCESS", payload: data })
 
     } catch (error) { 

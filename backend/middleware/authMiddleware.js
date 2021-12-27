@@ -22,6 +22,10 @@ const admin = (req, res, next) => {
             const token = req.headers.authorization.split(' ')[1]
             const payload = jwt.verify(token, process.env.JWT_SECRET)
             req.body.adminID = payload.adminID || 0
+
+            if (!req.body.adminID){
+                res.status(401).send({ error: "Admin permissions are required" })
+            }
             next()
         } catch (err) {
             res.status(401).send({ error: err.message })
