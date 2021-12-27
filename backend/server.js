@@ -140,6 +140,25 @@ app.post(`${process.env.API_URI}/admins/login`, async (req, res) => {
     }
 })
 
+// Get the Admin
+app.get(`${process.env.API_URI}/admins`, restrict.admin, async (req, res) => {
+    try {
+        const {password, ...admin} = await Admin.getByID(req.body)
+        res.json(admin)
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+//Update the Admin
+app.put(`${process.env.API_URI}/admins`, restrict.admin, async (req, res) => {
+    try {
+        const { password, ...admin } = await Admin.update(req.body)
+        res.json(admin)
+    } catch (err) {
+        res.status(400).send({ error: err.message })
+    }
+})
 
 // Get Completed Orders
 app.get(`${process.env.API_URI}/orders`, restrict.user, async (req, res) => {

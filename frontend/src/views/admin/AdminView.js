@@ -2,15 +2,15 @@ import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Form, Button} from 'react-bootstrap'
 import { AlertMsg } from '../../components/AlertMsg'
+import { Loader } from '../../components/Loader'
 import { getAdmin, updateAdmin } from '../../actions/admin/adminActions'
 
 const AdminView = (props) => {
 
-    const { details } = useSelector(state => state.admin)
-    const [error, setError] = useState('')
+    const { details, loading, error  } = useSelector(state => state.admin)
     const [confirmation, setConfirmation] = useState('')
     const [email, setEmail] = useState(details.email)
-    const [username, setUsername] = useState(details.username)
+    const [userName, setUsername] = useState(details.userName)
     const [password, setPassword] = useState('')
 
     const dispatch = useDispatch()
@@ -21,33 +21,28 @@ const AdminView = (props) => {
 
     useEffect(() => {
         if (details.email === undefined) {
-            props.history.push('/admin/login')
+            props.history.push('/admin/')
         }
     }, [details.email])
 
     const UpdateAdminHandler = (e) => {
         e.preventDefault()
-        try{
-            dispatch(updateAdmin({username, password, email}))
-            setError('')
-            setConfirmation('Your Account has been updated')
-        } catch(error) {
-            setError(error.message)
-        }
+        dispatch(updateAdmin({userName, password, email}))
+        setConfirmation('Your Account has been updated')
     }
 
    return (
        <Row className="justify-content-md-center">
             <Col md={6}>
                <h3>My Details</h3>
-                {error !== ''  && <AlertMsg msg={error} variant="danger" />}
+                {loading ? <Loader /> : error ? <AlertMsg msg={error} variant="danger" /> : ''}
                 {confirmation !== '' && <AlertMsg msg={confirmation} variant="success" />}
                <Form>
                    <Row className="mb-3">
                        <Form.Group as={Col}>
                            <Form.Label>User Name</Form.Label>
                            <Form.Control 
-                                value={username}
+                                value={userName}
                                 placeholder="User Name"
                                 onChange={(e) => { setUsername(e.target.value)}} />
                        </Form.Group>

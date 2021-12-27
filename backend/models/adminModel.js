@@ -1,5 +1,5 @@
 const md5 = require('md5')
-const generateAdminToken = require('../utils/generateToken')
+const generateToken = require('../utils/generateToken')
 const execute = require('../db')
 
 
@@ -40,13 +40,43 @@ const getByEmail = async (reqBody) => {
     return {admin: rows[0]}
 }
 
+const update = async (reqBody) => {
+    const admin = await getByID(reqBody)
+    const updatedAdmin = {
+        adminID: admin.adminID,
+        email: (reqBody.email && reqBody.email !== '') ? reqBody.email : admin.email,
+        userName: (reqBody.userName && reqBody.userName !== '') ? reqBody.userName : admin.userName,
+        password: (reqBody.password && reqBody.password !== '') ? md5(reqBody.password) : admin.password,
+    }
+
+    const sql = `UPDATE admins SET
+                        userName = ?,
+                        email = ?,
+                        password = ? 
+                    WHERE adminID = ${admin.adminID}`;
+
+    const params = [
+        updatedAdmin.userName, 
+        updatedAdmin.email,
+        updatedAdmin.password
+    ]
+
+    const result = await execute(sql, params)
+
+    if (!result.affectedRows) {
+        throw Error("Admin has not been updated")
+    }
+    return updatedAdmin
+}
+
+
 const login = async (reqBody) => {
     const errors = validate(reqBody, "login")
     if (errors.length > 0) {
         throw Error(errors.join(" "))
     }
 
-    const sql = `SELECT adminID, userName, email, password
+    const sql = `SELECT adminID, userName, email
                     FROM admins
                     WHERE active = 1
                     AND email = ? 
@@ -59,7 +89,7 @@ const login = async (reqBody) => {
         throw Error("Can not find an Admin")
     }
 
-    const token = generateAdminToken(rows[0].adminID)
+    const token = generateToken.admin(rows[0].adminID)
 
     return { admin: rows[0], token}
 }
@@ -79,4 +109,4 @@ const validate = (reqBody, action) => {
     return errors
 }
 
-module.exports = { getByID, getByEmail, login }
+module.exports = { getByID, getByEmail, login, update }

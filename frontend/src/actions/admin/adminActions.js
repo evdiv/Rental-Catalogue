@@ -8,6 +8,7 @@ export const loginAdmin = (email, password) => async(dispatch, getState) => {
         const { data } = await axios.post('/api/v1/admins/login', { email, password })
 
         dispatch({ type: "ADMIN_LOGIN_SUCCESS", payload: data })
+
         localStorage.setItem('token', JSON.stringify(getState().admin.token))
 
     } catch (error) {
@@ -56,4 +57,5 @@ export const updateAdmin = (admin) => async (dispatch, getState) => {
 export const LogoutAdmin = () => (dispatch) => {
     dispatch({ type: "ADMIN_LOGOUT" })
     localStorage.removeItem('token')
+    localStorage.removeItem('admin')
 }

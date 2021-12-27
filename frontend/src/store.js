@@ -39,6 +39,10 @@ const accountLocalStorage = localStorage.getItem('account')
     ? JSON.parse(localStorage.getItem('account'))
     : {}
 
+const adminLocalStorage = localStorage.getItem('admin')
+    ? JSON.parse(localStorage.getItem('admin'))
+    : {}
+
 const tokenLocalStorage = localStorage.getItem('token')
     ? JSON.parse(localStorage.getItem('token'))
     : ''
@@ -50,6 +54,7 @@ const orderLocalStorage = localStorage.getItem('order')
 const initialState = {
     cart: { cartProducts: cartLocalStorage },
     account: { details: accountLocalStorage, token: tokenLocalStorage},
+    admin: { details: adminLocalStorage, token: tokenLocalStorage },
     order: { orderDetails: orderLocalStorage}
 }
 

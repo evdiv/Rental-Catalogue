@@ -2,14 +2,14 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {LinkContainer} from 'react-router-bootstrap'
 import {Container, Nav, Navbar } from 'react-bootstrap'
-import { LogoutAccount } from '../../actions/accountActions'
+import { LogoutAdmin } from '../../actions/admin/adminActions'
 
 const Header = () => {
     const { details } = useSelector(state => state.admin)
 
     const dispatch = useDispatch()
     const logOutHandler = () => {
-        dispatch(LogoutAccount())
+        dispatch(LogoutAdmin())
     }
     return (
         <header>
@@ -48,7 +48,7 @@ const Header = () => {
                     <Nav>
                         { details.adminID &&
                             <>
-                            <LinkContainer to="/admin/account">
+                            <LinkContainer to="/admin/details">
                                 <Nav.Link><i className="fas fa-user"></i> My Account</Nav.Link>
                             </LinkContainer>
                                 <Nav.Link onClick={logOutHandler}><i className="fa-solid fa-right-from-bracket"></i> Log Out</Nav.Link>
