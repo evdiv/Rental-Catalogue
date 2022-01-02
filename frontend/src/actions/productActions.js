@@ -1,6 +1,19 @@
 import axios from 'axios'
 import { axiosErrorsHandler } from '../utils/errorsHandler'
 
+
+export const getAllProducts = () => async (dispatch) => {
+    try {
+        dispatch({ type: 'INDEX_PRODUCTS_REQUEST' })
+
+        const { data } = await axios.get('/api/v1/products')
+        dispatch({ type: 'INDEX_PRODUCTS_SUCCESS', payload: data })
+
+    } catch (error) {
+        dispatch({ type: 'INDEX_PRODUCTS_FAIL', payload: axiosErrorsHandler(error) })
+    }
+}
+
 export const getFeaturedProducts = () => async (dispatch) => {
     try {
         dispatch({type: 'FEATURED_PRODUCTS_REQUEST'})

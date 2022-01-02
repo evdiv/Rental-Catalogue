@@ -6,7 +6,7 @@ const getAll = async () => {
                     FROM products 
                     WHERE active = 1 
                     AND rentalRate > 0 
-                    LIMIT 30`;
+                    LIMIT 40`;
     const rows = await execute(sql)
     if (!rows[0]) {
         throw Error("Products are not found")

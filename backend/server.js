@@ -82,7 +82,7 @@ app.get(`${process.env.API_URI}/provinces`, async (req, res) => {
 // Get User
 app.get(`${process.env.API_URI}/users`, restrict.user, async (req, res) => {
     try {
-        const {password, ...user} = await User.getByID(req.body)
+        const { password, ...user } = await User.getByID(req.body.accountsID)
         res.json(user)
     } catch (err) {
         res.status(401).send({ error: err.message })
@@ -129,47 +129,6 @@ app.post(`${process.env.API_URI}/users/login`, async (req, res) => {
         res.status(401).send({ error: err.message })
     }
 })
-
-//LogIn an Admin
-app.post(`${process.env.API_URI}/admins/login`, async (req, res) => {
-    try {
-        const { admin, token } = await Admin.login(req.body)
-        res.json({ admin, token })
-    } catch (err) {
-        res.status(401).send({ error: err.message })
-    }
-})
-
-// Get the Admin
-app.get(`${process.env.API_URI}/admins`, restrict.admin, async (req, res) => {
-    try {
-        const {password, ...admin} = await Admin.getByID(req.body)
-        res.json(admin)
-    } catch (err) {
-        res.status(401).send({ error: err.message })
-    }
-})
-
-//Update the Admin
-app.put(`${process.env.API_URI}/admins`, restrict.admin, async (req, res) => {
-    try {
-        const { password, ...admin } = await Admin.update(req.body)
-        res.json(admin)
-    } catch (err) {
-        res.status(400).send({ error: err.message })
-    }
-})
-
-// Get All Orders
-app.get(`${process.env.API_URI}/orders`, restrict.admin, async (req, res) => {
-    try {
-        const orders = await Order.getAll()
-        res.json(orders)
-    } catch (err) {
-        res.status(404).send({ error: err.message })
-    }
-})
-
 
 // Get Completed Orders placed by LoggedIn User
 app.get(`${process.env.API_URI}/user-orders`, restrict.user, async (req, res) => {
@@ -255,6 +214,72 @@ app.put(`${process.env.API_URI}/user-orders/:id`, restrict.user, async (req, res
         res.status(404).send({ error: err.message })
     }
 })
+
+//*************************************
+// Admin Section
+// Get user by Id
+app.get(`${process.env.API_URI}/admins/users/:id`, restrict.admin, async (req, res) => {
+    try {
+        const user = await User.getByID(req.params.id)
+        const users = [user]
+        res.json(users)
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+// Get all users
+app.get(`${process.env.API_URI}/admins/users`, restrict.admin, async (req, res) => {
+    try {
+        const users = await User.index()
+        res.json(users)
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+
+//LogIn an Admin
+app.post(`${process.env.API_URI}/admins/login`, async (req, res) => {
+    try {
+        const { admin, token } = await Admin.login(req.body)
+        res.json({ admin, token })
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+// Get the Admin
+app.get(`${process.env.API_URI}/admins`, restrict.admin, async (req, res) => {
+    try {
+        const { password, ...admin } = await Admin.getByID(req.body)
+        res.json(admin)
+    } catch (err) {
+        res.status(401).send({ error: err.message })
+    }
+})
+
+//Update the Admin
+app.put(`${process.env.API_URI}/admins`, restrict.admin, async (req, res) => {
+    try {
+        const { password, ...admin } = await Admin.update(req.body)
+        res.json(admin)
+    } catch (err) {
+        res.status(400).send({ error: err.message })
+    }
+})
+
+// Get All Orders
+app.get(`${process.env.API_URI}/orders`, restrict.admin, async (req, res) => {
+    try {
+        const orders = await Order.getAll()
+        res.json(orders)
+    } catch (err) {
+        res.status(404).send({ error: err.message })
+    }
+})
+
+
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, console.log(`Server is running on port ${PORT}`))

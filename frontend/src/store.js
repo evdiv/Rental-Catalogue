@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { featuredProductsReducer, onSaleProductsReducer, singleProductReducer, brandProductsReducer, departmentProductsReducer} from './reducers/productReducers'
+import { indexProductsReducer, featuredProductsReducer, onSaleProductsReducer, singleProductReducer, brandProductsReducer, departmentProductsReducer} from './reducers/productReducers'
 import { allBrandsReducer, singleBrandReducer } from './reducers/brandReducers'
 import { allDepartmentsReducer, singleDepartmentReducer } from './reducers/departmentReducers'
 import { cartReducer } from './reducers/cartReducers'
@@ -11,11 +11,13 @@ import { provinceReducer } from './reducers/provinceReducers'
 import { orderReceiptReducer } from './reducers/orderReceiptReducers'
 import { userOrderReducer } from './reducers/userOrderReducers'
 import { userOrdersReducer } from './reducers/userOrdersReducers'
+import { userReducer } from './reducers/userReducers'
 import { ordersReducer } from './reducers/ordersReducers'
 
 const reducer = combineReducers({
     featuredProducts: featuredProductsReducer,
     onSaleProducts: onSaleProductsReducer,
+    products: indexProductsReducer,
     singleProduct: singleProductReducer,
     brandProducts: brandProductsReducer,
     allBrands: allBrandsReducer,
@@ -28,6 +30,7 @@ const reducer = combineReducers({
     admin: adminReducer,
     orders: ordersReducer,
     provinces: provinceReducer,
+    users: userReducer,
     userOrder: userOrderReducer,
     receipt: orderReceiptReducer,
     userOrders: userOrdersReducer

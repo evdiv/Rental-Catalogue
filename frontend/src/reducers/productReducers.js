@@ -1,3 +1,16 @@
+export const indexProductsReducer = (state = { products: [] }, action) => {
+    switch (action.type) {
+        case 'INDEX_PRODUCTS_REQUEST':
+            return { products: [], loading: true }
+        case 'INDEX_PRODUCTS_SUCCESS':
+            return { products: action.payload, loading: false }
+        case 'INDEX_PRODUCTS_FAIL':
+            return { products: [], loading: false, error: action.payload }
+        default:
+            return state
+    }
+}
+
 export const featuredProductsReducer = (state ={products: []}, action) => {
     switch (action.type) {
         case 'FEATURED_PRODUCTS_REQUEST':
@@ -23,6 +36,7 @@ export const onSaleProductsReducer = (state = { products: [] }, action) => {
             return state
     }
 }
+
 
 export const singleProductReducer = (state ={product: {}}, action) => {
     switch(action.type) {

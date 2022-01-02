@@ -4,7 +4,8 @@ const execute = require('../db')
 const getAll = async () => {
     const sql = `SELECT brandsID, brandName, brandDescription 
                     FROM brands 
-                    WHERE active = 1`;
+                    WHERE active = 1
+                    LIMIT 80`;
 
     const rows = await execute(sql)
     if (!rows[0]) {

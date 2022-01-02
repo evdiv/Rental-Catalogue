@@ -75,8 +75,8 @@ const update = async (reqBody) => {
     return updatedUser
 }
 
-const getByID = async (reqBody) => {
-    const errors = validate(reqBody, "accountsID")
+const getByID = async (accountsID) => {
+    const errors = validate({ accountsID }, "accountsID")
     if (errors.length > 0) {
         throw Error(errors.join(" "))
     }
@@ -86,7 +86,7 @@ const getByID = async (reqBody) => {
                     WHERE a.provincesID = p.provincesID
                     AND a.active = 1 
                     AND a.accountsID = ?`;
-    const params = [reqBody.accountsID]
+    const params = [accountsID]
     const rows = await execute(sql, params)
 
     if (rows[0] == undefined || !rows[0].accountsID) {
@@ -94,6 +94,24 @@ const getByID = async (reqBody) => {
     }
     return rows[0]
 }
+
+const index = async () => {
+
+    const sql = `SELECT a.accountsID, a.firstName, a.lastName, a.email, a.homeAddress, 
+                a.homeCity, a.postalCode, a.provincesID, p.provinceName
+                    FROM accounts AS a, provinces AS p
+                    WHERE a.provincesID = p.provincesID
+                    AND a.active = 1 
+                    LIMIT 20`;
+
+    const rows = await execute(sql)
+
+    if (!rows.length) {
+        throw Error("Active users are not found")
+    }
+    return rows
+}
+
 
 const getByEmail = async (reqBody) => {
     const errors = validate(reqBody, "email")
@@ -175,4 +193,4 @@ const validate = (reqBody, action) => {
     return errors
 }
 
-module.exports = { store, update, getByID, getByEmail, login }
+module.exports = { store, update, index, getByID, getByEmail, login }
